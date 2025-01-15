@@ -1,7 +1,7 @@
 {
   "name": "@pagopa/io-react-native-cbor",
   "version": "0.1.0",
-  "description": "Native module for CBOR",
+  "description": "Native support for CBOR",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -50,16 +50,13 @@
     "ios",
     "android"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mastro993/pagopa-io-react-native-cbor.git"
-  },
-  "author": "Federico Mastrini <federicomastrini93@gmail.com> (https://github.com/mastro993)",
+  "repository": "https://github.com/pagopa/io-react-native-cbor",
+  "author": "PagoPa (https://github.com/pagopa)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mastro993/pagopa-io-react-native-cbor/issues"
+    "url": "https://github.com/pagopa/io-react-native-cbor/issues"
   },
-  "homepage": "https://github.com/mastro993/pagopa-io-react-native-cbor#readme",
+  "homepage": "https://github.com/pagopa/io-react-native-cbor#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
