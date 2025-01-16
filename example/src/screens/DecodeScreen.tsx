@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { Button, SafeAreaView, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  Keyboard,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { styles } from '../utils/styles';
 
 function DecodeScreen() {
@@ -8,6 +15,7 @@ function DecodeScreen() {
 
   const handleDecodePress = () => {
     const decoded = input;
+    Keyboard.dismiss();
     setOutput(decoded);
   };
 
@@ -20,6 +28,7 @@ function DecodeScreen() {
           multiline={true}
           value={input}
           onChangeText={setInput}
+          onSubmitEditing={handleDecodePress}
         />
         <Button title="Decode" onPress={handleDecodePress} />
         <Text style={styles.label}>Output</Text>
