@@ -85,6 +85,9 @@ android {
 repositories {
   mavenCentral()
   google()
+  maven {
+    url './libs'
+  }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
@@ -95,5 +98,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "it.pagopa:cbor:1.0.0"
+  implementation 'com.upokecenter:cbor:5.0.0-alpha2'
 }
 
