@@ -1,5 +1,5 @@
-import { Navigation } from './Navigation';
+import { DecodeScreen } from './screens/DecodeScreen';
 
 export default function App() {
-  return <Navigation />;
+  return <DecodeScreen />;
 }
