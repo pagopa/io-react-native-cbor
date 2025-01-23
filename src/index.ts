@@ -1,3 +1,2 @@
-export { CBOR } from './cbor';
-
-export type { Document } from './types';
+export { decode } from './cbor';
+export { sign } from './cose';

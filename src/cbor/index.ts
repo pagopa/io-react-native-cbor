@@ -1,21 +1,12 @@
 import { IoReactNativeCbor } from '../utils/proxy';
 
 /**
- * CBOR class which represents a CBOR data in base64 format
+ * Decode base64 encoded CBOR data to JSON object
  *
  * @param data - The base64 encoded CBOR data
+ * @returns The decoded data as JSON object
  */
-export class CBOR {
-  constructor(private data: string) {
-    this.data = data;
-  }
-
-  /**
-   * Decode the CBOR data to JSON
-   *
-   * @returns The decoded data
-   */
-  decode(): Promise<string> {
-    return IoReactNativeCbor.decode(this.data);
-  }
-}
+export const decode = async (data: string): Promise<any> => {
+  const jsonString = await IoReactNativeCbor.decode(data);
+  return JSON.parse(jsonString);
+};

@@ -1,4 +1,4 @@
-import { CBOR } from '@pagopa/io-react-native-cbor';
+import * as CBOR from '@pagopa/io-react-native-cbor';
 import * as RNDocuments from '@react-native-documents/picker';
 import { useState } from 'react';
 import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
@@ -20,11 +20,10 @@ export default function App() {
 
   const handleDecodePress = async () => {
     if (input) {
-      const cbor = new CBOR(input);
-      cbor
-        .decode()
+      CBOR.decode(input)
         .then((decoded) => {
-          setOutput(JSON.stringify(JSON.parse(decoded), null, 2));
+          console.log('decoded', decoded);
+          setOutput(JSON.stringify(decoded, null, 2));
         })
         .catch((error) => {
           setOutput(error);
@@ -32,10 +31,20 @@ export default function App() {
     }
   };
 
+  const handleTestSign = async () => {
+    const { signature, publicKey } = await CBOR.sign(
+      'VGVzdCB0ZXN0',
+      'testAlias'
+    );
+    console.log('signedData', signature);
+    console.log('publicKey', publicKey);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView>
         <View style={styles.container}>
+          <Button title="Test sign" onPress={handleTestSign} />
           <Button title="Select input" onPress={handleSelectInput} />
           {input && (
             <>
