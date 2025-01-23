@@ -19,14 +19,10 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun decode(base64: String, promise: Promise) {
     try {
-      Log.d("DECODE", "Input: $base64");
       val rawCbor = kotlin.io.encoding.Base64.decode(base64)
-      Log.d("DECODE", "Raw: ${rawCbor.toString()}")
       val json = CBorParser(rawCbor).toJson()
-      Log.d("DECODE", "JSON: ${json.toString()}")
       promise.resolve(json)
     } catch (e: Exception){
-      Log.e("DECODE", e.toString())
       promise.reject(e)
     }
   }
