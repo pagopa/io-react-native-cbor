@@ -100,5 +100,14 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "it.pagopa:cbor:1.0.0"
   implementation 'com.upokecenter:cbor:5.0.0-alpha2'
+  implementation( 'com.android.identity:identity-android:202411.1') {
+    exclude(group: "org.bouncycastle")
+  }
+  implementation('com.android.identity:identity-mdoc:202411.1') {
+    exclude(group: "org.bouncycastle")
+  }
+  implementation( 'com.android.identity:identity:202411.1') {
+    exclude(group: "org.bouncycastle")
+  }
 }
 
