@@ -10,23 +10,22 @@ export default function App() {
       mode: 'open',
       type: [RNDocuments.types.plainText],
     });
-    const data = await RNFS.readFile(result.uri, 'utf8');
-    CBOR.decodeDocuments(data)
-      .then((decoded) => {
-        Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
-      })
-      .catch((error) => {
-        Alert.alert('❌ Decode Error', error.message);
-      });
+    try {
+      const data = await RNFS.readFile(result.uri, 'utf8');
+      const decoded = await CBOR.decodeDocuments(data);
+      Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
+    } catch (error: any) {
+      Alert.alert('❌ Decode Error', error);
+    }
   };
 
   const handleTestSign = async () => {
-    const { signature, publicKey } = await CBOR.sign(
-      'VGVzdCB0ZXN0',
-      'testAlias'
-    );
-    console.log('signedData', signature);
-    console.log('publicKey', publicKey);
+    try {
+      const result = await CBOR.sign('VGVzdCB0ZXN0', 'testAlias');
+      Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
+    } catch (error: any) {
+      Alert.alert('❌ Sign Error', error);
+    }
   };
 
   return (
