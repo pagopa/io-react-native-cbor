@@ -50,11 +50,8 @@
     "ios",
     "android"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mastro993/pagopa-io-react-native-cbor.git"
-  },
-  "author": "Federico Mastrini <federicomastrini93@gmail.com> (https://github.com/mastro993)",
+  "repository": "https://github.com/pagopa/io-react-native-cbor",
+  "author": "PagoPa (https://github.com/pagopa)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mastro993/pagopa-io-react-native-cbor/issues"
