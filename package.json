@@ -182,5 +182,8 @@
     "type": "legacy-module",
     "languages": "kotlin-swift",
     "version": "0.45.5"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
   }
 }

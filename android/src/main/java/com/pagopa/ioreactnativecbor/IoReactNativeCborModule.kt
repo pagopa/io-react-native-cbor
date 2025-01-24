@@ -33,6 +33,19 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
+  fun decodeDocuments(data: String, promise: Promise) {
+    try {
+      val buffer = kotlin.io.encoding.Base64.decode(data)
+      CBorParser(buffer).documentsCborToJson { json ->
+        promise.resolve(json)
+      }
+    } catch (e: Exception){
+      promise.reject(e)
+    }
+  }
+
+  @OptIn(ExperimentalEncodingApi::class)
+  @ReactMethod
   fun signWithCOSE(data: String, alias: String, promise: Promise) {
     try {
       val buffer = kotlin.io.encoding.Base64.decode(data)
@@ -40,7 +53,6 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         data = buffer,
         alias = alias
       )) {
-
         is SignWithCOSEResult.Failure -> {
           promise.reject(Exception(result.msg))
         }
