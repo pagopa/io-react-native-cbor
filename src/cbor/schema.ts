@@ -56,9 +56,9 @@ const claimPreprocess = (obj: any) => {
 };
 
 /**
- * Claim contained in a document
+ * Value contained in a document
  */
-export const DocumentClaim = z.preprocess(
+export const DocumentValue = z.preprocess(
   claimPreprocess,
   z.object({
     digestID: z.number().optional(),
@@ -68,25 +68,34 @@ export const DocumentClaim = z.preprocess(
   })
 );
 
+/**
+ * Issuer signed object
+ */
 export const IssuerSigned = z.object({
   nameSpaces: z
-    .record(z.string(), stringToJSON.pipe(z.array(DocumentClaim)))
+    .record(z.string(), stringToJSON.pipe(z.array(DocumentValue)))
     .optional(),
   issuerAuth: z.string().optional(),
 });
 
+/**
+ * mDOC object
+ */
 export const MDOC = z.object({
   docType: z.string().optional(),
   issuerSigned: IssuerSigned.optional(),
 });
 
+/**
+ * CBOR decoded data containing the status, version and the list of documents
+ */
 export const DecodedDocuments = z.object({
   status: z.number().optional(),
   version: z.string().optional(),
   documents: stringToJSON.pipe(z.array(MDOC)).optional(),
 });
 
-export type DocumentClaim = z.infer<typeof DocumentClaim>;
+export type DocumentValue = z.infer<typeof DocumentValue>;
 export type IssuerSigned = z.infer<typeof IssuerSigned>;
 export type MDOC = z.infer<typeof MDOC>;
 export type DecodedDocuments = z.infer<typeof DecodedDocuments>;

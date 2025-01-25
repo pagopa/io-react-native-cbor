@@ -1,8 +1,9 @@
-export { decode, decodeDocuments } from './cbor';
+export { decode, decodeDocuments } from './cbor/decoder';
 export type {
   DecodedDocuments,
   IssuerSigned,
-  DocumentClaim,
+  DocumentValue,
   MDOC,
 } from './cbor/schema';
-export { sign } from './cose';
+export { sign, verify } from './cose';
+export type { CoseSignature } from './cose/types';

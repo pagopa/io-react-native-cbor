@@ -46,11 +46,10 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
-  fun signWithCOSE(data: String, alias: String, promise: Promise) {
+  fun sign(data: String, alias: String, promise: Promise) {
     try {
-      val buffer = kotlin.io.encoding.Base64.decode(data)
       when (val result = COSEManager().signWithCOSE(
-        data = buffer,
+        data = kotlin.io.encoding.Base64.decode(data),
         alias = alias
       )) {
         is SignWithCOSEResult.Failure -> {
@@ -58,12 +57,26 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         }
         is SignWithCOSEResult.Success -> {
           val arguments = Arguments.createMap().apply {
-            putString("signature", kotlin.io.encoding.Base64.encode(result.signature))
+            putString("dataSigned", kotlin.io.encoding.Base64.encode(result.signature))
             putString("publicKey", kotlin.io.encoding.Base64.encode(result.publicKey))
           }
           promise.resolve(arguments)
         }
       }
+    } catch (e: Exception){
+      promise.reject(e)
+    }
+  }
+
+  @OptIn(ExperimentalEncodingApi::class)
+  @ReactMethod
+  fun verify(dataSigned: String, publicKey: String, promise: Promise) {
+    try {
+      val result = COSEManager().verifySign1(
+        dataSigned = kotlin.io.encoding.Base64.decode(dataSigned),
+        publicKey = kotlin.io.encoding.Base64.decode(publicKey)
+      )
+      promise.resolve(result)
     } catch (e: Exception){
       promise.reject(e)
     }
