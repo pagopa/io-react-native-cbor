@@ -68,6 +68,8 @@ export const DocumentValue = z.preprocess(
   })
 );
 
+export type DocumentValue = z.infer<typeof DocumentValue>;
+
 /**
  * Issuer signed object
  */
@@ -78,6 +80,8 @@ export const IssuerSigned = z.object({
   issuerAuth: z.string().optional(),
 });
 
+export type IssuerSigned = z.infer<typeof IssuerSigned>;
+
 /**
  * mDOC object
  */
@@ -85,6 +89,8 @@ export const MDOC = z.object({
   docType: z.string().optional(),
   issuerSigned: IssuerSigned.optional(),
 });
+
+export type MDOC = z.infer<typeof MDOC>;
 
 /**
  * CBOR decoded data containing the status, version and the list of documents
@@ -95,7 +101,4 @@ export const DecodedDocuments = z.object({
   documents: stringToJSON.pipe(z.array(MDOC)).optional(),
 });
 
-export type DocumentValue = z.infer<typeof DocumentValue>;
-export type IssuerSigned = z.infer<typeof IssuerSigned>;
-export type MDOC = z.infer<typeof MDOC>;
 export type DecodedDocuments = z.infer<typeof DecodedDocuments>;

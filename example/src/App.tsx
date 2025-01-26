@@ -1,4 +1,4 @@
-import * as CBOR from '@pagopa/io-react-native-cbor';
+import * as RNCBOR from '@pagopa/io-react-native-cbor';
 import * as RNDocuments from '@react-native-documents/picker';
 import { useState } from 'react';
 import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
@@ -6,7 +6,7 @@ import * as RNFS from 'react-native-fs';
 import { styles } from './styles';
 
 export default function App() {
-  const [signature, setSignature] = useState<CBOR.CoseSignature>();
+  const [signature, setSignature] = useState<RNCBOR.COSESignResult>();
 
   const handleSelectInput = async () => {
     const [result] = await RNDocuments.pick({
@@ -15,7 +15,7 @@ export default function App() {
     });
     try {
       const data = await RNFS.readFile(result.uri, 'utf8');
-      const decoded = await CBOR.decodeDocuments(data);
+      const decoded = await RNCBOR.decodeDocuments(data);
       Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
     } catch (error: any) {
       Alert.alert('❌ Decode Error', error.message);
@@ -24,7 +24,7 @@ export default function App() {
 
   const handleTestSign = async () => {
     try {
-      const result = await CBOR.sign('VGVzdCB0ZXN0', 'testAlias');
+      const result = await RNCBOR.sign('VGVzdCB0ZXN0', 'testAlias');
       setSignature(result);
       Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
     } catch (error: any) {
@@ -35,7 +35,10 @@ export default function App() {
   const handleTestVerify = async () => {
     if (signature) {
       try {
-        const result = await CBOR.verify(signature);
+        const result = await RNCBOR.verify(
+          signature.dataSigned,
+          signature.publicKey
+        );
         Alert.alert('✅ Verify Success', JSON.stringify(result, null, 2));
       } catch (error: any) {
         Alert.alert('❌ Verify Error', error.message);

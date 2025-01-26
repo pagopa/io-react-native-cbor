@@ -40,14 +40,14 @@ export enum ECCurveType {
   Reserved = 0,
 }
 
-export type CoseSignature = {
-  dataSigned: string;
-  publicKey: string;
-};
-
 export type COSEKey = {
   crv: ECCurveName;
   kty: ECCurveType;
   x: string;
   y: string;
+};
+
+export type COSESignResult = {
+  dataSigned: string;
+  publicKey: string;
 };

@@ -1,5 +1,5 @@
 import { IoReactNativeCbor } from '../utils/proxy';
-import type { CoseSignature } from './types';
+import type { COSESignResult } from './types';
 
 /**
  * Sign base64 encoded data with COSE
@@ -11,7 +11,7 @@ import type { CoseSignature } from './types';
 export const sign = async (
   data: string,
   alias: string
-): Promise<CoseSignature> => await IoReactNativeCbor.sign(data, alias);
+): Promise<COSESignResult> => await IoReactNativeCbor.sign(data, alias);
 
 /**
  * Verify a signature with the provided public key
@@ -20,8 +20,7 @@ export const sign = async (
  * @param publicKey - The public key to use for verification
  * @returns The result of the verification
  */
-export const verify = async ({
-  dataSigned,
-  publicKey,
-}: CoseSignature): Promise<boolean> =>
-  await IoReactNativeCbor.verify(dataSigned, publicKey);
+export const verify = async (
+  dataSigned: string,
+  publicKey: string
+): Promise<boolean> => await IoReactNativeCbor.verify(dataSigned, publicKey);
