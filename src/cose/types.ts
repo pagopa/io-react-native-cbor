@@ -47,7 +47,7 @@ export type COSEKey = {
   y: string;
 };
 
-export type COSESignResult = {
+export type SignResult = {
   dataSigned: string;
   publicKey: string;
 };

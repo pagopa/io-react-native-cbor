@@ -95,10 +95,15 @@ export type MDOC = z.infer<typeof MDOC>;
 /**
  * CBOR decoded data containing the status, version and the list of documents
  */
-export const DecodedDocuments = z.object({
+export const Documents = z.object({
   status: z.number().optional(),
   version: z.string().optional(),
   documents: stringToJSON.pipe(z.array(MDOC)).optional(),
 });
 
-export type DecodedDocuments = z.infer<typeof DecodedDocuments>;
+/**
+ * Documents object from string
+ */
+export const DocumentsFromString = stringToJSON.pipe(Documents);
+
+export type Documents = z.infer<typeof Documents>;
