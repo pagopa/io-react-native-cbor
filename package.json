@@ -1,8 +1,8 @@
 {
   "name": "@pagopa/io-react-native-cbor",
   "version": "0.1.0",
-  "description": "Native module for CBOR",
-  "source": "./src/index.tsx",
+  "description": "Native support for CBOR",
+  "source": "./src/index",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "exports": {
@@ -54,9 +54,9 @@
   "author": "PagoPa (https://github.com/pagopa)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mastro993/pagopa-io-react-native-cbor/issues"
+    "url": "https://github.com/pagopa/io-react-native-cbor/issues"
   },
-  "homepage": "https://github.com/mastro993/pagopa-io-react-native-cbor#readme",
+  "homepage": "https://github.com/pagopa/io-react-native-cbor#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -182,5 +182,8 @@
     "type": "legacy-module",
     "languages": "kotlin-swift",
     "version": "0.45.5"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
   }
 }

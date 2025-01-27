@@ -1,25 +1,60 @@
-import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from '@pagopa/io-react-native-cbor';
+import { CBOR, COSE } from '@pagopa/io-react-native-cbor';
+import * as RNDocuments from '@react-native-documents/picker';
+import { useState } from 'react';
+import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
+import * as RNFS from 'react-native-fs';
+import { styles } from './styles';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
+  const [signature, setSignature] = useState<COSE.SignResult>();
 
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const handleSelectInput = async () => {
+    const [result] = await RNDocuments.pick({
+      mode: 'open',
+      type: [RNDocuments.types.plainText],
+    });
+    try {
+      const data = await RNFS.readFile(result.uri, 'utf8');
+      const decoded = await CBOR.decodeDocuments(data);
+      Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
+    } catch (error: any) {
+      Alert.alert('❌ Decode Error', error.message);
+    }
+  };
+
+  const handleTestSign = async () => {
+    try {
+      const result = await COSE.sign('VGVzdCB0ZXN0', 'testAlias');
+      setSignature(result);
+      Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
+    } catch (error: any) {
+      Alert.alert('❌ Sign Error', error.message);
+    }
+  };
+
+  const handleTestVerify = async () => {
+    if (signature) {
+      try {
+        const result = await COSE.verify(
+          signature.dataSigned,
+          signature.publicKey
+        );
+        Alert.alert('✅ Verify Success', JSON.stringify(result, null, 2));
+      } catch (error: any) {
+        Alert.alert('❌ Verify Error', error.message);
+      }
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.label}>CBOR</Text>
+        <Button title="Decode from file" onPress={handleSelectInput} />
+        <Text style={styles.label}>COSE</Text>
+        <Button title="Test sign" onPress={handleTestSign} />
+        {signature && <Button title="Test verify" onPress={handleTestVerify} />}
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
