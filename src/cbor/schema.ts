@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { claimPreprocess, stringToJSON } from './schema.utils';
 
-enum DocumentTypeEnum {
+export enum DocumentTypeEnum {
   MDL = 'org.iso.18013.5.1.mDL',
   EU_PID = 'eu.europa.ec.eudi.pid.1',
 }
@@ -18,8 +18,8 @@ export const DocumentValue = z.preprocess(
   z.object({
     digestID: z.number().optional(),
     random: z.string().optional(),
-    elementIdentifier: z.string().optional(),
-    elementValue: z.any().optional(),
+    elementIdentifier: z.string(),
+    elementValue: z.any(),
   })
 );
 
@@ -29,10 +29,8 @@ export type DocumentValue = z.infer<typeof DocumentValue>;
  * Issuer signed object
  */
 export const IssuerSigned = z.object({
-  nameSpaces: z
-    .record(z.string(), stringToJSON.pipe(z.array(DocumentValue)))
-    .optional(),
-  issuerAuth: z.string().optional(),
+  nameSpaces: z.record(z.string(), stringToJSON.pipe(z.array(DocumentValue))),
+  issuerAuth: z.string(),
 });
 
 export type IssuerSigned = z.infer<typeof IssuerSigned>;
@@ -41,8 +39,8 @@ export type IssuerSigned = z.infer<typeof IssuerSigned>;
  * mDOC object
  */
 export const MDOC = z.object({
-  docType: DocumentType.optional(),
-  issuerSigned: IssuerSigned.optional(),
+  docType: DocumentType,
+  issuerSigned: IssuerSigned,
 });
 
 export type MDOC = z.infer<typeof MDOC>;
@@ -53,7 +51,7 @@ export type MDOC = z.infer<typeof MDOC>;
 export const Documents = z.object({
   status: z.number().optional(),
   version: z.string().optional(),
-  documents: stringToJSON.pipe(z.array(MDOC)).optional(),
+  documents: stringToJSON.pipe(z.array(MDOC)),
 });
 
 /**
