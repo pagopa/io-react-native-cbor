@@ -8,26 +8,81 @@ Native module for CBOR
 npm install @pagopa/io-react-native-cbor
 ```
 
-## Usage
+or
 
-
-```js
-import { multiply } from '@pagopa/io-react-native-cbor';
-
-// ...
-
-const result = await multiply(3, 7);
+```sh
+yarn add @pagopa/io-react-native-cbor
 ```
 
+### Additional setup
 
-## Contributing
+#### Android
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+Add this to the root `build.gradle` file:
 
-## License
+```gradle
+allprojects {
+    repositories {
+        // Required for @pagopa/io-react-native-cbor
+        maven { url("${project(':pagopa_io-react-native-cbor').projectDir}/libs") }
+    }
+}
+```
 
-MIT
+## Usage
 
----
+### CBOR
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+#### Decode CBOR to a JSON object
+
+This method allows to decode a CBOR base64 encoded data to a JSON object. This method does not decode nested CBOR data, so it needs additional work in order fo fully decode a CBOR object.
+
+```typescript
+import { CBOR } from '@pagopa/io-react-native-cbor';
+
+const decoded = await CBOR.decode(base64EncodedData);
+```
+
+#### Decode CBOR documents
+
+This method allows to decode CBOR base64 encoded MDOC data to a `Documents` object
+
+```typescript
+import { CBOR } from '@pagopa/io-react-native-cbor';
+
+const decodedDocuments = await CBOR.decodeDocuments(base64EncodedData);
+```
+
+### COSE
+
+#### Sign data
+
+```typescript
+import { COSE } from '@pagopa/io-react-native-cbor';
+
+const { dataSigned, publicKey } = await COSE.sign(data, keyAlias);
+```
+
+#### Verify data signature
+
+```typescript
+import { COSE } from '@pagopa/io-react-native-cbor';
+
+const result = await COSE.verify(data, publicKey);
+```
+
+## Example
+
+There is an example app which you can use to try and understand how to use this package:
+
+```sh
+cd example
+
+yarn install
+
+# For iOS
+yarn ios
+
+# For Android
+yarn android
+```
