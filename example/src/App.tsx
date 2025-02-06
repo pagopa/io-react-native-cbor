@@ -1,8 +1,11 @@
 import { CBOR, COSE } from '@pagopa/io-react-native-cbor';
+import { deleteKey, generate } from '@pagopa/io-react-native-crypto';
 import * as RNDocuments from '@react-native-documents/picker';
 import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { styles } from './styles';
+
+export const KEYTAG = 'TEST_KEYTAG';
 
 export default function App() {
   const handleSelectInput = async () => {
@@ -21,7 +24,9 @@ export default function App() {
 
   const handleTestSign = async () => {
     try {
-      const result = await COSE.sign('VGVzdCB0ZXN0', 'testAlias');
+      await deleteKey(KEYTAG);
+      await generate(KEYTAG);
+      const result = await COSE.sign('VGVzdCB0ZXN0', KEYTAG);
       Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
     } catch (error: any) {
       Alert.alert('❌ Sign Error', error.message);

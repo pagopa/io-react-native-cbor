@@ -5,7 +5,7 @@ import { SignResult } from './types';
  * Sign base64 encoded data with COSE
  *
  * @param data - The base64 encoded data to sign
- * @param alias - The alias of the key to use for signing
+ * @param alias - The alias of the key to use for signing. If the key does not exist, it will be generated.
  * @returns The signature and the public key
  */
 export const sign = async (data: string, alias: string): Promise<SignResult> =>
