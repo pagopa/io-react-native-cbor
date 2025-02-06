@@ -1,13 +1,10 @@
 import { CBOR, COSE } from '@pagopa/io-react-native-cbor';
 import * as RNDocuments from '@react-native-documents/picker';
-import { useState } from 'react';
 import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
 import * as RNFS from 'react-native-fs';
 import { styles } from './styles';
 
 export default function App() {
-  const [signature, setSignature] = useState<COSE.SignResult>();
-
   const handleSelectInput = async () => {
     const [result] = await RNDocuments.pick({
       mode: 'open',
@@ -25,7 +22,6 @@ export default function App() {
   const handleTestSign = async () => {
     try {
       const result = await COSE.sign('VGVzdCB0ZXN0', 'testAlias');
-      setSignature(result);
       Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
     } catch (error: any) {
       Alert.alert('❌ Sign Error', error.message);
@@ -33,16 +29,18 @@ export default function App() {
   };
 
   const handleTestVerify = async () => {
-    if (signature) {
-      try {
-        const result = await COSE.verify(
-          signature.dataSigned,
-          signature.publicKey
-        );
-        Alert.alert('✅ Verify Success', JSON.stringify(result, null, 2));
-      } catch (error: any) {
-        Alert.alert('❌ Verify Error', error.message);
+    try {
+      const result = await COSE.verify(
+        'hEOhASZBoEVoZWxsb1hHMEUCIQC06Stj/TKM5gbhwAb4SC4sz22J9ZkMMOCQ3bq3HcIifgIgY/YZy7ya3I8I52jXfy/EhbWAl83/kH0vsGIkUb2YBDM=',
+        'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEr6rRg9G4SDg0i8W1DBKSvk9wMlhumqTF353H2CmrycKClwgwErIY+COCVrpF6JH9k0vnOJUhtItPv2uMMo11yQ=='
+      );
+      if (result) {
+        Alert.alert('✅ Verify Success');
+      } else {
+        Alert.alert('❌ Verify Error');
       }
+    } catch (error: any) {
+      Alert.alert('❌ Verify Error', error.message);
     }
   };
 
@@ -53,7 +51,7 @@ export default function App() {
         <Button title="Decode from file" onPress={handleSelectInput} />
         <Text style={styles.label}>COSE</Text>
         <Button title="Test sign" onPress={handleTestSign} />
-        {signature && <Button title="Test verify" onPress={handleTestVerify} />}
+        <Button title="Test verify" onPress={handleTestVerify} />
       </View>
     </SafeAreaView>
   );
