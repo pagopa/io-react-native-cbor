@@ -1,6 +1,6 @@
 # @pagopa/io-react-native-cbor
 
-Native module for CBOR
+Native module for CBOR decoding and COSE signing.
 
 ## Installation
 
@@ -8,26 +8,44 @@ Native module for CBOR
 npm install @pagopa/io-react-native-cbor
 ```
 
-## Usage
+or
 
-
-```js
-import { multiply } from '@pagopa/io-react-native-cbor';
-
-// ...
-
-const result = await multiply(3, 7);
+```sh
+yarn add @pagopa/io-react-native-cbor
 ```
 
+### Additional setup
 
-## Contributing
+#### Android
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+In order to make this package work on Android you need to add this to the root `build.gradle` file:
 
-## License
+```gradle
+allprojects {
+    repositories {
+        // Required for @pagopa/io-react-native-cbor
+        maven { url("${project(':pagopa_io-react-native-cbor').projectDir}/libs") }
+    }
+}
+```
 
-MIT
+## Modules
 
----
+- [CBOR](/src/cbor/README.md)
+- [COSE](/src/cose/README.md)
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+## Example
+
+There is an example app which you can use to try and understand how to use this package:
+
+```sh
+cd example
+
+yarn install
+
+# For iOS
+yarn ios
+
+# For Android
+yarn android
+```
