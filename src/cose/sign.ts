@@ -1,5 +1,9 @@
+import {
+  CryptoError,
+  getPublicKey,
+  PublicKey,
+} from '@pagopa/io-react-native-crypto';
 import { IoReactNativeCbor } from '../utils/proxy';
-import { getPublicKey, PublicKey } from '@pagopa/io-react-native-crypto';
 
 /**
  * Sign base64 encoded data with COSE
@@ -10,8 +14,16 @@ import { getPublicKey, PublicKey } from '@pagopa/io-react-native-crypto';
  * @returns The signature
  */
 export const sign = async (data: string, keyTag: string): Promise<string> => {
-  await getPublicKey(keyTag);
-  return await IoReactNativeCbor.sign(data, keyTag);
+  return new Promise(async (resolve, reject) => {
+    await getPublicKey(keyTag)
+      .then(async () => {
+        const signature = await IoReactNativeCbor.sign(data, keyTag);
+        resolve(signature);
+      })
+      .catch((error: CryptoError) => {
+        reject(error.message);
+      });
+  });
 };
 
 /**
