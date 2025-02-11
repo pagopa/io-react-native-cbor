@@ -15,18 +15,34 @@ This method allows the decode of CBOR data into readable JSON objectes.
 **Note**: this method does not decode nested CBOR objects and therefore complex objects needs additional manual decoding
 
 ```typescript
-const bade64EncodedData = '....';
-const decoded = await CBOR.decode(bade64EncodedData);
+const data = '....';
+const decoded = await CBOR.decode(data);
 ```
+
+**Parameters**
+
+- `data` (string): The base64 encoded CBOR object to decode
+
+**Returns**
+
+- `Promise<string>`: A promise that resolves with the JSON object in string format
 
 #### `decodeDocuments`
 
 This metod allows the decoding of CBOR data which contains MDOC objects. The result of this function is a [Documents](#documents) object
 
 ```typescript
-const bade64EncodedData = '....';
-const decodedDocuments = await CBOR.decodeDocuments(bade64EncodedData);
+const data = '....';
+const decodedDocuments = await CBOR.decodeDocuments(data);
 ```
+
+**Parameters**
+
+- `data` (string): The base64 encoded CBOR object to decode
+
+**Returns**
+
+- `Promise<Documents>`: A promise that resolves with the decoded [Documents](#documents) object
 
 ### Types
 

@@ -21,12 +21,12 @@ const keyAlias = 'my-key-alias';
 const dataSigned = await COSE.sign(dataToSign, keyAlias);
 ```
 
-**Parameters:**
+**Parameters**
 
 - `data` (string): The base64 encoded data to sign
 - `alias` (string): The alias of the key to use for signing. If the key doesn't exist, it will be generated
 
-**Returns:**
+**Returns**
 
 - `Promise<string>`: A promise that resolves with the base64 encoded signature
 
@@ -48,11 +48,11 @@ const publicKey = {
 const isValid = await COSE.verify(dataSigned, publicKey);
 ```
 
-**Parameters:**
+**Parameters**
 
 - `signature` (string): The signed data to verify
 - `publicKey` (PublicKey): The public key in JWK format
 
-**Returns:**
+**Returns**
 
 - `Promise<boolean>`: A promise that resolves with the verification result (true if valid, false otherwise)
