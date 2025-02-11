@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { claimPreprocess, stringToJSON } from './schema.utils';
+import { stringToJSON } from './schema.utils';
 
 export enum DocumentTypeEnum {
   MDL = 'org.iso.18013.5.1.mDL',
@@ -10,18 +10,14 @@ export const DocumentType = z.nativeEnum(DocumentTypeEnum);
 export type DocumentType = z.infer<typeof DocumentType>;
 
 /**
-/**
  * Value contained in a document
  */
-export const DocumentValue = z.preprocess(
-  claimPreprocess,
-  z.object({
-    digestID: z.number().optional(),
-    random: z.string().optional(),
-    elementIdentifier: z.string(),
-    elementValue: z.any(),
-  })
-);
+export const DocumentValue = z.object({
+  digestID: z.number().optional(),
+  random: z.string().optional(),
+  elementIdentifier: z.string(),
+  elementValue: z.any(),
+});
 
 export type DocumentValue = z.infer<typeof DocumentValue>;
 

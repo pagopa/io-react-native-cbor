@@ -42,7 +42,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   fun decodeDocuments(data: String, promise: Promise) {
     try {
       val buffer = kotlin.io.encoding.Base64.decode(data)
-      CBorParser(buffer).documentsCborToJson { json ->
+      CBorParser(buffer).documentsCborToJson(true) { json ->
         json?.let {
           promise.resolve(it)
         } ?: run {
