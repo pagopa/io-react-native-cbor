@@ -51,10 +51,10 @@ export default function App() {
   const handleTestSign = async () => {
     try {
       await generateKeyIfNotExists(KEYTAG);
-      const result = await COSE.sign(DATA_TO_SIGN, KEYTAG);
+      const result = await COSE.sign(DATA_TO_SIGN, 'AA');
       Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
     } catch (error: any) {
-      Alert.alert('❌ Sign Error', error);
+      Alert.alert('❌ Sign Error', JSON.stringify(error, null, 2));
     }
   };
 
