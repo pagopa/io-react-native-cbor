@@ -6,3 +6,4 @@ export {
   IssuerSigned,
   MDOC,
 } from './schema';
+export { CborFailure, CborFailureCodes } from './failure';

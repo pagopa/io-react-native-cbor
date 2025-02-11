@@ -10,39 +10,31 @@ import { CBOR } from '@pagopa/io-react-native-cbor';
 
 #### `decode`
 
-This method allows the decode of CBOR data into readable JSON objectes.
+This method allows to decode CBOR data into readable JSON objects.
+Returns a `Promise` which resolves to a JSON object, or rejects with an instance of `CborFailure` in case of failure.
 
 **Note**: this method does not decode nested CBOR objects and therefore complex objects needs additional manual decoding
 
 ```typescript
-const data = '....';
-const decoded = await CBOR.decode(data);
+try {
+  const decoded = await CBOR.decode('...');
+} catch (e) {
+  const { message, userInfo } = e as CborFailure;
+}
 ```
-
-**Parameters**
-
-- `data` (string): The base64 encoded CBOR object to decode
-
-**Returns**
-
-- `Promise<string>`: A promise that resolves with the JSON object in string format
 
 #### `decodeDocuments`
 
-This metod allows the decoding of CBOR data which contains MDOC objects. The result of this function is a [Documents](#documents) object
+This metod allows the decoding of CBOR data which contains MDOC objects.
+Returns a promise wich resolves to a [Documents](#documents) object, or rejects with an instance of `CborFailure` in case of failure.
 
 ```typescript
-const data = '....';
-const decodedDocuments = await CBOR.decodeDocuments(data);
+try {
+  const decoded = await CBOR.decodeDocuments('...');
+} catch (e) {
+  const { message, userInfo } = e as CborFailure;
+}
 ```
-
-**Parameters**
-
-- `data` (string): The base64 encoded CBOR object to decode
-
-**Returns**
-
-- `Promise<Documents>`: A promise that resolves with the decoded [Documents](#documents) object
 
 ### Types
 
@@ -93,3 +85,10 @@ enum DocumentTypeEnum {
   EU_PID = 'eu.europa.ec.eudi.pid.1',
 }
 ```
+
+### Error Codes
+
+| Type              | Description                                   |
+| ----------------- | --------------------------------------------- |
+| UNABLE_TO_DECODE  | The data does not contain a valid CBOR object |
+| UNKNOWN_EXCEPTION | Unexpected failure                            |

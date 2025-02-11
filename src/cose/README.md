@@ -11,32 +11,25 @@ import { COSE } from '@pagopa/io-react-native-cbor';
 #### `sign`
 
 Signs base64 encoded data using COSE (CBOR Object Signing and Encryption).
+Returns a `Promise` which resolves to a `string` containing the signature or rejects with an instance of `CoseFailure` in case of failures.
+
+If the key
 
 ```typescript
-// base64 encoded data
-const dataToSign = '....';
-// alias for the signing key
-const keyAlias = 'my-key-alias';
-
-const dataSigned = await COSE.sign(dataToSign, keyAlias);
+try {
+  const dataSigned = await COSE.sign('Data to sign', 'keyTag');
+} catch (e) {
+  const { message, userInfo } = e as CoseFailure;
+}
 ```
-
-**Parameters**
-
-- `data` (string): The base64 encoded data to sign
-- `alias` (string): The alias of the key to use for signing. If the key doesn't exist, it will be generated
-
-**Returns**
-
-- `Promise<string>`: A promise that resolves with the base64 encoded signature
 
 #### `verify`
 
 Verifies a COSE signature using the provided public key.
 
+Returns a `Promise` which resolves to a `bool` indicating if the signature is verified or rejects with an instance of `CoseFailure` in case of failures.
+
 ```typescript
-// signed data to verify
-const dataSigned = '....';
 // public key in JWK format
 const publicKey = {
   kty: 'EC',
@@ -45,14 +38,16 @@ const publicKey = {
   y: '...',
 };
 
-const isValid = await COSE.verify(dataSigned, publicKey);
+try {
+  const isValid = await COSE.verify('Signed data to verift', publicKey);
+} catch (e) {
+  const { message, userInfo } = e as CoseFailure;
+}
 ```
 
-**Parameters**
+### Error Codes
 
-- `signature` (string): The signed data to verify
-- `publicKey` (PublicKey): The public key in JWK format
-
-**Returns**
-
-- `Promise<boolean>`: A promise that resolves with the verification result (true if valid, false otherwise)
+| Type              | Description                                  |
+| ----------------- | -------------------------------------------- |
+| UNABLE_TO_SIGN    | It was not possible to sign the given string |
+| UNKNOWN_EXCEPTION | Unexpected failure                           |
