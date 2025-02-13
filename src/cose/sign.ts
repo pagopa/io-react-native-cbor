@@ -5,8 +5,8 @@ import { IoReactNativeCbor } from '../utils/proxy';
  * Sign base64 encoded data with COSE
  *
  * @param data - The base64 encoded data to sign
- * @param alias - The alias of the key to use for signing. If the key does not exist, it will be generated.
- * @throws {CryptoError} If the key does not exist
+ * @param alias - The alias of the key to use for signing.
+ * @throws {CoseFailure} If the key does not exist
  * @returns The signature
  */
 export const sign = async (data: string, keyTag: string): Promise<string> =>
