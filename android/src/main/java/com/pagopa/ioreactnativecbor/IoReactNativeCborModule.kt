@@ -33,7 +33,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         ModuleException.UNABLE_TO_DECODE.reject(promise)
       }
     } catch (e: Exception){
-      ModuleException.UNKNOWN_EXCEPTION.reject(promise)
+      ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
 
@@ -50,7 +50,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         }
       }
     } catch (e: Exception){
-      ModuleException.UNKNOWN_EXCEPTION.reject(promise)
+      ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
 
@@ -63,7 +63,11 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         alias = keyTag
       )) {
         is SignWithCOSEResult.Failure -> {
-          ModuleException.UNABLE_TO_SIGN.reject(promise)
+          if(result.msg === "Key doesn't exists!!") {
+            ModuleException.PUBLIC_KEY_NOT_FOUND.reject(promise)
+          } else {
+            ModuleException.UNABLE_TO_SIGN.reject(promise)
+          }
         }
         is SignWithCOSEResult.Success -> {
           val base64Signature = kotlin.io.encoding.Base64.encode(result.signature)
@@ -71,7 +75,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         }
       }
     } catch (e: Exception){
-      ModuleException.UNKNOWN_EXCEPTION.reject(promise)
+      ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
 
@@ -79,30 +83,25 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun verify(dataSigned: String, publicKey: ReadableMap, promise: Promise) {
     try {
-      // Parse JWK to ECKey
-      val jwkJson = (publicKey.toHashMap() as Map<*, *>?)?.let { JSONObject(it) }
-      val ecKey = ECKey.parse(jwkJson.toString())
-
-      // Convert to public key
-      val publicKeyInstance = ecKey.toPublicKey()
-
-      val result = COSEManager().verifySign1(
+      val result = COSEManager().verifySign1FromJWK(
         dataSigned = kotlin.io.encoding.Base64.decode(dataSigned),
-        publicKey =  publicKeyInstance.encoded
+        jwk = publicKey.toString()
       )
       promise.resolve(result)
     } catch (e: Exception){
-      ModuleException.UNKNOWN_EXCEPTION.reject(promise)
+      ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
 
   companion object {
     const val NAME = "IoReactNativeCbor"
+    const val ERROR_USER_INFO_KEY = "error"
 
     private enum class ModuleException(
       val ex: Exception
     ) {
       UNABLE_TO_DECODE(Exception("UNABLE_TO_DECODE")),
+      PUBLIC_KEY_NOT_FOUND(Exception("PUBLIC_KEY_NOT_FOUND")),
       UNABLE_TO_SIGN(Exception("UNABLE_TO_SIGN")),
       UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 

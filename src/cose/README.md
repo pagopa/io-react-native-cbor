@@ -47,7 +47,8 @@ try {
 
 ### Error Codes
 
-| Type              | Description                                  |
-| ----------------- | -------------------------------------------- |
-| UNABLE_TO_SIGN    | It was not possible to sign the given string |
-| UNKNOWN_EXCEPTION | Unexpected failure                           |
+| Type                 | Description                                        |
+| -------------------- | -------------------------------------------------- |
+| PUBLIC_KEY_NOT_FOUND | The public key is missing for the specified keyTag |
+| UNABLE_TO_SIGN       | It was not possible to sign the given string       |
+| UNKNOWN_EXCEPTION    | Unexpected failure                                 |

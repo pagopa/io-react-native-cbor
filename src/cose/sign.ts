@@ -1,4 +1,4 @@
-import { getPublicKey, PublicKey } from '@pagopa/io-react-native-crypto';
+import { PublicKey } from '@pagopa/io-react-native-crypto';
 import { IoReactNativeCbor } from '../utils/proxy';
 
 /**
@@ -9,14 +9,8 @@ import { IoReactNativeCbor } from '../utils/proxy';
  * @throws {CryptoError} If the key does not exist
  * @returns The signature
  */
-export const sign = async (data: string, keyTag: string): Promise<string> => {
-  // This will throw a CryptoError if the key does not exist.
-  // It is a workaround to ensure the key is generated before using this function
-  // and will be removed once the native methods will handle this failure
-  await getPublicKey(keyTag);
-
-  return await IoReactNativeCbor.sign(data, keyTag);
-};
+export const sign = async (data: string, keyTag: string): Promise<string> =>
+  await IoReactNativeCbor.sign(data, keyTag);
 
 /**
 /**

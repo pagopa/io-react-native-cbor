@@ -1,7 +1,10 @@
 /**
  * All error codes that the module could return.
  */
-export type CoseFailureCodes = 'UNABLE_TO_SIGN' | 'UNKNOWN_EXCEPTION';
+export type CoseFailureCodes =
+  | 'PUBLIC_KEY_NOT_FOUND'
+  | 'UNABLE_TO_SIGN'
+  | 'UNKNOWN_EXCEPTION';
 
 /**
  * Error type returned by a rejected promise.
