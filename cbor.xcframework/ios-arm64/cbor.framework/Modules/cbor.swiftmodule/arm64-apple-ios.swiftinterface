@@ -1,0 +1,92 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+// swift-module-flags: -target arm64-apple-ios18.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name cbor
+import CryptoKit
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_exported import cbor
+extension Swift.Array where Element == Swift.UInt8 {
+  public var data: Foundation.Data {
+    get
+  }
+}
+public enum ECCurveType : Swift.UInt64 {
+  case OKP
+  case EC2
+  case Symmetric
+  case Reserved
+  public init?(rawValue: Swift.UInt64)
+  public typealias RawValue = Swift.UInt64
+  public var rawValue: Swift.UInt64 {
+    get
+  }
+}
+extension Foundation.Data {
+  public var bytes: Swift.Array<Swift.UInt8> {
+    get
+  }
+  public init?(base64UrlEncoded input: Swift.String)
+  public func base64UrlEncodedString() -> Swift.String
+}
+public enum ECCurveName : Swift.UInt64 {
+  case p256
+  case p384
+  case p521
+  public init?(rawValue: Swift.UInt64)
+  public typealias RawValue = Swift.UInt64
+  public var rawValue: Swift.UInt64 {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class CoseKey {
+  public var crv: cbor.ECCurveName {
+    get
+  }
+  public var kty: cbor.ECCurveType {
+    get
+  }
+  public var x: [Swift.UInt8] {
+    get
+  }
+  public var y: [Swift.UInt8] {
+    get
+  }
+  @objc deinit
+}
+extension cbor.CoseKey {
+  convenience public init(x: [Swift.UInt8], y: [Swift.UInt8], crv: cbor.ECCurveName = .p256)
+  convenience public init(crv: cbor.ECCurveName, x963Representation: Foundation.Data)
+  convenience public init?(jwk: Swift.String)
+  public func getx963Representation() -> Foundation.Data
+  public func toJWK() -> Swift.String?
+}
+@_hasMissingDesignatedInitializers public class CborCose {
+  public static func sign(data: Foundation.Data, privateKey: cbor.CoseKeyPrivate) -> Foundation.Data
+  public static func verify(data: Foundation.Data, publicKey: cbor.CoseKey) -> Swift.Bool
+  public static func createSecurePrivateKey(curve: cbor.ECCurveName = .p256, forceSecureEnclave: Swift.Bool = true) -> cbor.CoseKeyPrivate?
+  public static func decodeCBOR(data: Foundation.Data, _ documents: Swift.Bool = true, _ properIssuerItem: Swift.Bool = false) -> Swift.String?
+  public static func jsonFromCBOR(data: Foundation.Data) -> Any?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class CoseKeyPrivate {
+  @objc deinit
+}
+extension cbor.CoseKeyPrivate {
+  convenience public init(privateKeyx963Data: Foundation.Data, crv: cbor.ECCurveName = .p256)
+  convenience public init(crv: cbor.ECCurveName)
+  convenience public init(publicKeyx963Data: Foundation.Data, secureEnclaveKeyID: Foundation.Data)
+  convenience public init(x: [Swift.UInt8], y: [Swift.UInt8], d: [Swift.UInt8], crv: cbor.ECCurveName = .p256)
+  convenience public init?(data: [Swift.UInt8])
+  convenience public init?(base64: Swift.String)
+  public func getx963Representation() -> Foundation.Data
+  public func base64Encoded() -> Swift.String
+}
+extension cbor.ECCurveType : Swift.Equatable {}
+extension cbor.ECCurveType : Swift.Hashable {}
+extension cbor.ECCurveType : Swift.RawRepresentable {}
+extension cbor.ECCurveName : Swift.Equatable {}
+extension cbor.ECCurveName : Swift.Hashable {}
+extension cbor.ECCurveName : Swift.RawRepresentable {}

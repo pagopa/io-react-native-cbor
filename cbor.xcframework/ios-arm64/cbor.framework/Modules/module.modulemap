@@ -1,0 +1,6 @@
+framework module cbor {
+  umbrella header "cbor.h"
+  export *
+
+  module * { export * }
+}
