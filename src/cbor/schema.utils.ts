@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
 /**
- * Transform a string to a JSON object
+ * If the value is a string, parse it as JSON.
+ * Otherwise, return the value as is.
  */
-export const stringToJSON = z.string().transform((str) => JSON.parse(str));
+export const coerceToJSON = z.any().transform((any) => {
+  if (typeof any === 'object') {
+    return any;
+  }
+  return JSON.parse(any);
+});

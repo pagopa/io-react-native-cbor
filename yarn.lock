@@ -2459,7 +2459,6 @@ __metadata:
     "@react-native-community/cli": 15.0.1
     "@react-native-community/cli-platform-android": 15.0.1
     "@react-native-community/cli-platform-ios": 15.0.1
-    "@react-native-documents/picker": ^10.0.1
     "@react-native/babel-preset": 0.76.6
     "@react-native/metro-config": 0.76.6
     "@react-native/typescript-config": 0.76.6
@@ -2729,16 +2728,6 @@ __metadata:
   bin:
     rnc-cli: build/bin.js
   checksum: 26c98ef67b4b89d3af13f2a3b19e51c7b2de5d320ca908cb628ca22b32bff5a17b8a1cc7f4b0ece303c4e53dc10e8ac0e88df9b376e63ebc97acb8d358f78c2e
-  languageName: node
-  linkType: hard
-
-"@react-native-documents/picker@npm:^10.0.1":
-  version: 10.1.0
-  resolution: "@react-native-documents/picker@npm:10.1.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: b5876b164a30c54335f65a0f2eb5a9fe67a0fb3045166b6d56e1a40e610f13268d21593c82465bb3317194deca61b8a52d6546c0a1a50ce43e58417a6fd8214d
   languageName: node
   linkType: hard
 

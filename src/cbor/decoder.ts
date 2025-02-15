@@ -31,7 +31,9 @@ export const decodeDocuments = async (data: string): Promise<Documents> => {
   const jsonString = await IoReactNativeCbor.decodeDocuments(data);
   const decoded = await DocumentsFromString.safeParseAsync(jsonString);
   if (!decoded.success) {
-    throw new Error('Failed to decode documents data');
+    throw new Error(
+      `Failed to decode documents data:\n ${JSON.stringify(decoded.error, null, 2)}`
+    );
   }
   return decoded.data;
 };

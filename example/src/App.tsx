@@ -4,9 +4,11 @@ import {
   getPublicKey,
   PublicKey,
 } from '@pagopa/io-react-native-crypto';
-import * as RNDocuments from '@react-native-documents/picker';
 import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
-import * as RNFS from 'react-native-fs';
+import mdlCbor from './mocks/mdl';
+import moreDocsCbor from './mocks/moreDocs';
+import moreDocsIssuerAuthCbor from './mocks/moreDocsIssuerAuth';
+import oneDocCbor from './mocks/oneDoc';
 import { styles } from './styles';
 
 const KEYTAG = 'TEST_KEYTAG';
@@ -34,13 +36,8 @@ export default function App() {
     }
   };
 
-  const handleSelectInput = async () => {
-    const [result] = await RNDocuments.pick({
-      mode: 'open',
-      type: [RNDocuments.types.plainText],
-    });
+  const handleDecode = (data: string) => async () => {
     try {
-      const data = await RNFS.readFile(result.uri, 'utf8');
       const decoded = await CBOR.decodeDocuments(data);
       Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
     } catch (error: any) {
@@ -75,7 +72,16 @@ export default function App() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.label}>CBOR</Text>
-        <Button title="Decode from file" onPress={handleSelectInput} />
+        <Button title="Decode MDL" onPress={handleDecode(mdlCbor)} />
+        <Button
+          title="Decode multiple docs"
+          onPress={handleDecode(moreDocsCbor)}
+        />
+        <Button
+          title="Decode multiple docs with issuer auth"
+          onPress={handleDecode(moreDocsIssuerAuthCbor)}
+        />
+        <Button title="Decode single doc" onPress={handleDecode(oneDocCbor)} />
         <Text style={styles.label}>COSE</Text>
         <Button title="Test sign" onPress={handleTestSign} />
         <Button title="Test verify" onPress={handleTestVerify} />
