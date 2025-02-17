@@ -39,19 +39,24 @@ export default function App() {
   const handleDecode = (data: string) => async () => {
     try {
       const decoded = await CBOR.decodeDocuments(data);
-      Alert.alert('✅ Decode Success', JSON.stringify(decoded, null, 2));
+      console.log('✅ CBOR Decode Success\n', JSON.stringify(decoded, null, 2));
+      Alert.alert('✅ CBOR Decode Success', JSON.stringify(decoded, null, 2));
     } catch (error: any) {
-      Alert.alert('❌ Decode Error', error.message);
+      console.log('❌ CBOR Decode Error\n', JSON.stringify(error, null, 2));
+      Alert.alert('❌ CBOR Decode Error');
     }
   };
 
   const handleTestSign = async () => {
     try {
       await generateKeyIfNotExists(KEYTAG);
+      const key = await getPublicKey(KEYTAG);
       const result = await COSE.sign(DATA_TO_SIGN, KEYTAG);
-      Alert.alert('✅ Sign Success', JSON.stringify(result, null, 2));
+      console.log('✅ Sign Success\n', result);
+      console.log('🔑 Public Key\n', JSON.stringify(key, null, 2));
     } catch (error: any) {
-      Alert.alert('❌ Sign Error', JSON.stringify(error, null, 2));
+      console.log('❌ COSE Sign Error\n', JSON.stringify(error, null, 2));
+      Alert.alert('❌ COSE Sign Error');
     }
   };
 

@@ -28,12 +28,6 @@ export const decode = async (data: string): Promise<any> => {
  * @returns The decoded data as mDOC object
  */
 export const decodeDocuments = async (data: string): Promise<Documents> => {
-  const jsonString = await IoReactNativeCbor.decodeDocuments(data);
-  const decoded = await DocumentsFromString.safeParseAsync(jsonString);
-  if (!decoded.success) {
-    throw new Error(
-      `Failed to decode documents data:\n ${JSON.stringify(decoded.error, null, 2)}`
-    );
-  }
-  return decoded.data;
+  const json = await IoReactNativeCbor.decodeDocuments(data);
+  return await DocumentsFromString.parseAsync(json);
 };
