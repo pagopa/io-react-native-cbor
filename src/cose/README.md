@@ -11,23 +11,22 @@ import { COSE } from '@pagopa/io-react-native-cbor';
 #### `sign`
 
 Signs base64 encoded data using COSE (CBOR Object Signing and Encryption).
-Returns a `Promise` which resolves to a `string` containing the signature or rejects with an instance of `CoseFailure` in case of failures.
-
-If the key
+Returns a `Promise` which resolves to a `string` containing the COSE-Sign1 object in base64 encoding or rejects with an instance of `CoseFailure` in case of failures.
 
 ```typescript
 try {
-  const dataSigned = await COSE.sign('Data to sign', 'keyTag');
+  const coseSign1 = await COSE.sign('base64EncodedData', 'keyTag');
 } catch (e) {
   const { message, userInfo } = e as CoseFailure;
 }
 ```
 
+````
+
 #### `verify`
 
-Verifies a COSE signature using the provided public key.
-
-Returns a `Promise` which resolves to a `bool` indicating if the signature is verified or rejects with an instance of `CoseFailure` in case of failures.
+Verifies a COSE-Sign1 object using the provided public key.
+Returns a `Promise` which resolves to a `boolean` indicating if the signature is valid or rejects with an instance of `CoseFailure` in case of failures.
 
 ```typescript
 // public key in JWK format
@@ -39,7 +38,7 @@ const publicKey = {
 };
 
 try {
-  const isValid = await COSE.verify('Signed data to verift', publicKey);
+  const isValid = await COSE.verify('coseSign1Base64Data', publicKey);
 } catch (e) {
   const { message, userInfo } = e as CoseFailure;
 }
@@ -52,3 +51,4 @@ try {
 | PUBLIC_KEY_NOT_FOUND | The public key is missing for the specified keyTag |
 | UNABLE_TO_SIGN       | It was not possible to sign the given string       |
 | UNKNOWN_EXCEPTION    | Unexpected failure                                 |
+````

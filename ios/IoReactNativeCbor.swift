@@ -20,6 +20,7 @@ class IoReactNativeCbor: NSObject {
     resolve(json);
   }
   
+  
   @objc func decodeDocuments(_ data: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     guard let bytes = Data(base64Encoded: data) else {
       reject("Error", nil, nil);
@@ -66,7 +67,10 @@ class IoReactNativeCbor: NSObject {
   
   @objc func verify(_ sign1Data: String, jwk: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     do {
-      let data = Data(base64Encoded: sign1Data)!
+      guard let data = Data(base64Encoded: sign1Data) else {
+        ME.unexpected.reject(reject: reject)
+        return
+      }
       
       let jwkData = try JSONSerialization.data(withJSONObject: jwk)
       let jwkString = String(data: jwkData, encoding: .utf8)!
