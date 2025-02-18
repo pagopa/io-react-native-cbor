@@ -81,10 +81,10 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
-  fun verify(dataSigned: String, publicKey: ReadableMap, promise: Promise) {
+  fun verify(payloadData: String, publicKey: ReadableMap, promise: Promise) {
     try {
       val result = COSEManager().verifySign1FromJWK(
-        dataSigned = kotlin.io.encoding.Base64.decode(dataSigned),
+        dataSigned = kotlin.io.encoding.Base64.decode(payloadData),
         jwk = publicKey.toString()
       )
       promise.resolve(result)

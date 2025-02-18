@@ -34,7 +34,7 @@ class IoReactNativeCbor: NSObject {
     resolve(json);
   }
   
-  @objc func sign(_ dataToSign: String, keyTag: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+  @objc func sign(_ payloadData: String, keyTag: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     do {
       var privateKey: SecKey?
       var status: OSStatus
@@ -56,7 +56,7 @@ class IoReactNativeCbor: NSObject {
       let publicKeyx963Data  = SecKeyCopyExternalRepresentation(publicKey, nil)! as Data
       
       let coseKey = CoseKeyPrivate(publicKeyx963Data: publicKeyx963Data, secureEnclaveKeyID: se256.dataRepresentation)
-      let signedPayload = CborCose.sign(data: dataToSign.data(using: .utf8)!, privateKey: coseKey)
+      let signedPayload = CborCose.sign(data: payloadData.data(using: .utf8)!, privateKey: coseKey)
       
       resolve(signedPayload.base64EncodedString())
     } catch {
@@ -64,13 +64,13 @@ class IoReactNativeCbor: NSObject {
     }
   }
   
-  @objc func verify(_ dataSigned: String, jwk: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+  @objc func verify(_ sign1Data: String, jwk: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     do {
-      let data = Data(base64Encoded: dataSigned)!
+      let data = Data(base64Encoded: sign1Data)!
       
       let jwkData = try JSONSerialization.data(withJSONObject: jwk)
       let jwkString = String(data: jwkData, encoding: .utf8)!
-      let publicKey = CoseKey(crv: .p256, x963Representation: Data(base64Encoded: "hEOhASagS0hlbGxvIHdvcmxkWEAiMiuMigVled/z/1BpY1qt8eVO95jv34dimB8p5q2VnfTdDKlXCAIrLFhM3Ir3v7zkss3tEUP+iW6lLfmTavbL")!)
+      let publicKey = CoseKey(jwk: jwkString)!
       
       let verified = CborCose.verify(data: data, publicKey: publicKey)
       

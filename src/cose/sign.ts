@@ -9,18 +9,17 @@ import { IoReactNativeCbor } from '../utils/proxy';
  * @throws {CoseFailure} If the key does not exist
  * @returns The signature
  */
-export const sign = async (data: string, keyTag: string): Promise<string> =>
-  await IoReactNativeCbor.sign(data, keyTag);
+export const sign = async (coseData: string, keyTag: string): Promise<string> =>
+  await IoReactNativeCbor.sign(coseData, keyTag);
 
 /**
-/**
- * Verify a signature with the provided public key
+ * Verifies a Sign1 message with the provided public key
  *
- * @param signature - The signed data to verify
+ * @param signature - The Sign1 message to verify
  * @param publicKey - The public key in JWK format
  * @returns The result of the verification
  */
 export const verify = async (
-  signature: string,
+  data: string,
   publicKey: PublicKey
-): Promise<boolean> => await IoReactNativeCbor.verify(signature, publicKey);
+): Promise<boolean> => await IoReactNativeCbor.verify(data, publicKey);
