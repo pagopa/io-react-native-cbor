@@ -6,14 +6,14 @@ class IoReactNativeCbor: NSObject {
   private typealias ME = ModuleException
   private let keyConfig: KeyConfig = .ec
   
-  @objc func decode(_ data: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-    guard let bytes = Data(base64Encoded: data) else {
-      reject("Error", nil, nil);
+  @objc func decode(_ cbor: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    guard let data = Data(base64Encoded: cbor) else {
+      ME.invalidEncoding.reject(reject: reject)
       return
     }
     
-    guard let json = CborCose.jsonFromCBOR(data: bytes) else {
-      reject("Error", nil, nil);
+    guard let json = CborCose.jsonFromCBOR(data: data) else {
+      ME.unableToDecode.reject(reject: reject)
       return
     }
     
@@ -21,14 +21,14 @@ class IoReactNativeCbor: NSObject {
   }
   
   
-  @objc func decodeDocuments(_ data: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-    guard let bytes = Data(base64Encoded: data) else {
-      reject("Error", nil, nil);
+  @objc func decodeDocuments(_ mdoc: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    guard let data = Data(base64Encoded: mdoc) else {
+      ME.invalidEncoding.reject(reject: reject)
       return
     }
     
-    guard let json = CborCose.decodeCBOR(data: bytes, true, true) else {
-      reject("Error", nil, nil);
+    guard let json = CborCose.decodeCBOR(data: data, true, true) else {
+      ME.unableToDecode.reject(reject: reject)
       return
     }
     
@@ -36,6 +36,12 @@ class IoReactNativeCbor: NSObject {
   }
   
   @objc func sign(_ payloadData: String, keyTag: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    
+    guard let data = Data(base64Encoded: payloadData) else {
+      ME.invalidEncoding.reject(reject: reject)
+      return
+    }
+    
     do {
       var privateKey: SecKey?
       var status: OSStatus
@@ -57,11 +63,6 @@ class IoReactNativeCbor: NSObject {
       let publicKeyx963Data  = SecKeyCopyExternalRepresentation(publicKey, nil)! as Data
       let coseKey = CoseKeyPrivate(publicKeyx963Data: publicKeyx963Data, secureEnclaveKeyID: se256.dataRepresentation)
       
-      guard let data = Data(base64Encoded: payloadData) else {
-        ME.unexpected.reject(reject: reject)
-        return
-      }
-      
       let signedPayload = CborCose.sign(data: data, privateKey: coseKey)
       
       resolve(signedPayload.base64EncodedString())
@@ -73,7 +74,7 @@ class IoReactNativeCbor: NSObject {
   @objc func verify(_ sign1Data: String, jwk: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     do {
       guard let data = Data(base64Encoded: sign1Data) else {
-        ME.unexpected.reject(reject: reject)
+        ME.invalidEncoding.reject(reject: reject)
         return
       }
       
@@ -136,6 +137,8 @@ class IoReactNativeCbor: NSObject {
     case unableToDecode = "UNABLE_TO_DECODE"
     case publicKeyNotFound = "PUBLIC_KEY_NOT_FOUND"
     case unableToSign = "UNABLE_TO_SIGN"
+    case invalidEncoding = "INVALID_ENCODING"
+    case threadingError = "THREADING_ERROR"
     case unexpected = "UNEXPECTED_ERROR"
     
     func error(userInfo: [String : Any]? = nil) -> NSError {
@@ -145,6 +148,10 @@ class IoReactNativeCbor: NSObject {
       case .publicKeyNotFound:
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       case .unableToSign:
+        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
+      case .invalidEncoding:
+        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
+      case .threadingError:
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       case .unexpected:
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)

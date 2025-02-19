@@ -2,21 +2,21 @@
 
 @interface RCT_EXTERN_MODULE(IoReactNativeCbor, NSObject)
 
-RCT_EXTERN_METHOD(decode: (NSString)data
+RCT_EXTERN_METHOD(decode: (NSString)cbor
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(decodeDocuments: (NSString)data
+RCT_EXTERN_METHOD(decodeDocuments: (NSString)mdoc
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(sign: (NSString)data
-                  keyTag: (NSString *)keyTag
+RCT_EXTERN_METHOD(sign: (NSString)payload
+                  keyTag: (NSString*)keyTag
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(verify: (NSString)dataSigned
-                  jwk: (NSDictionary *)jwk
+RCT_EXTERN_METHOD(verify: (NSString)sign1Data
+                  jwk: (NSDictionary*)jwk
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
