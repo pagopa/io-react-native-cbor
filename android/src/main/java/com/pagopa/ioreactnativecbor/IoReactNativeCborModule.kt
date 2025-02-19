@@ -23,8 +23,14 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
   fun decode(data: String, promise: Promise) {
+    val buffer = try {
+      kotlin.io.encoding.Base64.decode(data)
+    } catch (e: Exception) {
+      ModuleException.INVALID_ENCODING.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
+      return;
+    }
+
     try {
-      val buffer = kotlin.io.encoding.Base64.decode(data)
       val json = CBorParser(buffer).toJson()
       json?.let {
         promise.resolve(it)
@@ -39,8 +45,14 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
   fun decodeDocuments(data: String, promise: Promise) {
+    val buffer = try {
+      kotlin.io.encoding.Base64.decode(data)
+    } catch (e: Exception) {
+      ModuleException.INVALID_ENCODING.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
+      return;
+    }
+
     try {
-      val buffer = kotlin.io.encoding.Base64.decode(data)
       CBorParser(buffer).documentsCborToJson(true) { json ->
         json?.let {
           promise.resolve(it)
@@ -55,10 +67,17 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
-  fun sign(data: String, keyTag: String, promise: Promise) {
+  fun sign(payload: String, keyTag: String, promise: Promise) {
+    val data = try {
+      kotlin.io.encoding.Base64.decode(payload)
+    } catch (e: Exception) {
+      ModuleException.INVALID_ENCODING.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
+      return;
+    }
+
     try {
       val result = COSEManager().signWithCOSE(
-        data = kotlin.io.encoding.Base64.decode(data),
+        data = data,
         alias = keyTag
       )
       when (result) {
@@ -92,10 +111,17 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
-  fun verify(payloadData: String, publicKey: ReadableMap, promise: Promise) {
+  fun verify(sign1Data: String, publicKey: ReadableMap, promise: Promise) {
+    val data = try {
+      kotlin.io.encoding.Base64.decode(sign1Data)
+    } catch (e: Exception) {
+      ModuleException.INVALID_ENCODING.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
+      return;
+    }
+
     try {
       val result = COSEManager().verifySign1FromJWK(
-        dataSigned = kotlin.io.encoding.Base64.decode(payloadData),
+        dataSigned = data,
         jwk = publicKey.toString()
       )
       promise.resolve(result)
@@ -114,6 +140,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
       UNABLE_TO_DECODE(Exception("UNABLE_TO_DECODE")),
       PUBLIC_KEY_NOT_FOUND(Exception("PUBLIC_KEY_NOT_FOUND")),
       UNABLE_TO_SIGN(Exception("UNABLE_TO_SIGN")),
+      INVALID_ENCODING(Exception("INVALID_ENCODING")),
       UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 
       fun reject(

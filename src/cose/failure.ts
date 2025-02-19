@@ -4,6 +4,8 @@
 export type CoseFailureCodes =
   | 'PUBLIC_KEY_NOT_FOUND'
   | 'UNABLE_TO_SIGN'
+  | 'INVALID_ENCODING'
+  | 'THREADING_ERROR'
   | 'UNKNOWN_EXCEPTION';
 
 /**

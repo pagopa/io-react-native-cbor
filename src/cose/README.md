@@ -21,8 +21,6 @@ try {
 }
 ```
 
-````
-
 #### `verify`
 
 Verifies a COSE-Sign1 object using the provided public key.
@@ -46,9 +44,14 @@ try {
 
 ### Error Codes
 
-| Type                 | Description                                        |
-| -------------------- | -------------------------------------------------- |
-| PUBLIC_KEY_NOT_FOUND | The public key is missing for the specified keyTag |
-| UNABLE_TO_SIGN       | It was not possible to sign the given string       |
-| UNKNOWN_EXCEPTION    | Unexpected failure                                 |
-````
+| Type                 | Platform    | Description                                        |
+| -------------------- | ----------- | -------------------------------------------------- |
+| PUBLIC_KEY_NOT_FOUND | Android/iOS | The public key is missing for the specified keyTag |
+| INVALID_ENCODING     | Android/iOS | Provided payload has incorrect encoding            |
+| UNABLE_TO_SIGN       | Android/iOS | It was not possible to sign the given string       |
+| THREADING_ERROR      | iOS         | Unexpected failure                                 |
+| UNKNOWN_EXCEPTION    | Android/iOS | Unexpected failure                                 |
+
+```
+
+```

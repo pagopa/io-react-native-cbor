@@ -1,7 +1,10 @@
 /**
  * All error codes that the module could return.
  */
-export type CborFailureCodes = 'UNABLE_TO_DECODE' | 'UNKNOWN_EXCEPTION';
+export type CborFailureCodes =
+  | 'UNABLE_TO_DECODE'
+  | 'INVALID_ENCODING'
+  | 'UNKNOWN_EXCEPTION';
 
 /**
  * Error type returned by a rejected promise.
