@@ -102,9 +102,9 @@ class IoReactNativeCbor: NSObject {
         return
       }
       
-      let jwkData = try JSONSerialization.data(withJSONObject: jwk)
-      let jwkString = String(data: jwkData, encoding: .utf8)!
-      let publicKey = CoseKey(jwk: jwkString)!
+      let publicKeyJson = try JSONSerialization.data(withJSONObject: jwk, options:[] )
+      let publicKeyString = String(data: publicKeyJson, encoding: .utf8)!
+      let publicKey = CoseKey(jwk: publicKeyString)!
       
       let verified = CborCose.verify(data: data, publicKey: publicKey)
       
