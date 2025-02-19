@@ -18,11 +18,4 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        // Required for @pagopa/io-react-native-cbor
-        maven { url("${project(':pagopa_io-react-native-cbor').projectDir}/libs") }
-    }
-}
-
 apply plugin: "com.facebook.react.rootproject"

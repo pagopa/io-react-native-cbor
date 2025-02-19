@@ -13,19 +13,18 @@ import { styles } from './styles';
 
 const KEYTAG = 'TEST_KEYTAG';
 
-// PID CBOR object, base64 encoded
-const DATA_TO_SIGN =
-  'omdkb2NUeXBld2V1LmV1cm9wYS5lYy5ldWRpLnBpZC4xam5hbWVTcGFjZXOhd2V1LmV1cm9wYS5lYy5ldWRpLnBpZC4xuCRrZmFtaWx5X25hbWX0amdpdmVuX25hbWX0amJpcnRoX2RhdGX0a2FnZV9vdmVyXzE49GthZ2Vfb3Zlcl8xM/RrYWdlX292ZXJfMTb0a2FnZV9vdmVyXzIx9GthZ2Vfb3Zlcl82MPRrYWdlX292ZXJfNjX0a2FnZV9vdmVyXzY49GxhZ2VfaW5feWVhcnP0bmFnZV9iaXJ0aF95ZWFy9HFmYW1pbHlfbmFtZV9iaXJ0aPRwZ2l2ZW5fbmFtZV9iaXJ0aPRrYmlydGhfcGxhY2X0bWJpcnRoX2NvdW50cnn0a2JpcnRoX3N0YXRl9GpiaXJ0aF9jaXR59HByZXNpZGVudF9hZGRyZXNz9HByZXNpZGVudF9jb3VudHJ59G5yZXNpZGVudF9zdGF0ZfRtcmVzaWRlbnRfY2l0efR0cmVzaWRlbnRfcG9zdGFsX2NvZGX0b3Jlc2lkZW50X3N0cmVldPR1cmVzaWRlbnRfaG91c2VfbnVtYmVy9GZnZW5kZXL0a25hdGlvbmFsaXR59G1pc3N1YW5jZV9kYXRl9GtleHBpcnlfZGF0ZfRxaXNzdWluZ19hdXRob3JpdHn0b2RvY3VtZW50X251bWJlcvR1YWRtaW5pc3RyYXRpdmVfbnVtYmVy9G9pc3N1aW5nX2NvdW50cnn0dGlzc3VpbmdfanVyaXNkaWN0aW9u9Ghwb3J0cmFpdPR1cG9ydHJhaXRfY2FwdHVyZV9kYXRl9A==';
+// "This is test data" base64 encoded
+const DATA_TO_SIGN = 'VGhpcyBpcyBhIHRlc3QgZGF0YQ==';
 
-// COSE object with payload `this is test data`
+// COSE Sign1 object with payload `This is test data`
 const DATA_TO_VERIFY =
-  'hEOhASagUXRoaXMgaXMgdGVzdCBkYXRhWECWHFXxcZPkyupozacO5KTeBDcbXFYX6HaFynTZ85qXdtGGd9bhtgBq1vcjYdK0QHP+DmG15108cm497i83ScSf';
+  'hEOhASagU1RoaXMgaXMgYSB0ZXN0IGRhdGFYQDfXLpQpsSZyBJE+0AvBs27tuqIuNEeuRYQACPSLFGT9X18d8RrLkBS0f/AYKbFpW+zd6CmFQ8ry9xkZOT1lkbg=';
 
 const TEST_KEY: PublicKey = {
-  crv: 'P-256',
   kty: 'EC',
-  x: 'RjbyQJnEKZuBIQ71mLMVs0+y5uzdEe1+pALMMoucqlQ=',
-  y: 'hlVFni6N2sqKY6XK3KGmqU4m7Y+U606ElJKRvNQ0nH4=',
+  crv: 'P-256',
+  y: 'AO4+pA5yIuxHLJqJogiLT90o+gwZnND2qEQjEfMZ+Tta',
+  x: 'AP06ubTkmvo+U1HeiZ35xKHaox++EX6ViRkGnKHclVJB',
 };
 
 export default function App() {

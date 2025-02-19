@@ -55,9 +55,14 @@ class IoReactNativeCbor: NSObject {
       
       let se256 = try CryptoKit.SecureEnclave.P256.KeyAgreement.PrivateKey()
       let publicKeyx963Data  = SecKeyCopyExternalRepresentation(publicKey, nil)! as Data
-      
       let coseKey = CoseKeyPrivate(publicKeyx963Data: publicKeyx963Data, secureEnclaveKeyID: se256.dataRepresentation)
-      let signedPayload = CborCose.sign(data: payloadData.data(using: .utf8)!, privateKey: coseKey)
+      
+      guard let data = Data(base64Encoded: payloadData) else {
+        ME.unexpected.reject(reject: reject)
+        return
+      }
+      
+      let signedPayload = CborCose.sign(data: data, privateKey: coseKey)
       
       resolve(signedPayload.base64EncodedString())
     } catch {

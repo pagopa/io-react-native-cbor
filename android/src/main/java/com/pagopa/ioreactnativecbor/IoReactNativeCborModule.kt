@@ -7,11 +7,10 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
-import com.nimbusds.jose.jwk.ECKey
-import it.pagopa.cbor_implementation.cose.COSEManager
-import it.pagopa.cbor_implementation.cose.SignWithCOSEResult
-import it.pagopa.cbor_implementation.parser.CBorParser
-import org.json.JSONObject
+import it.pagopa.io.wallet.cbor.cose.COSEManager
+import it.pagopa.io.wallet.cbor.cose.FailureReason
+import it.pagopa.io.wallet.cbor.cose.SignWithCOSEResult
+import it.pagopa.io.wallet.cbor.parser.CBorParser
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
@@ -32,7 +31,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
       } ?: run {
         ModuleException.UNABLE_TO_DECODE.reject(promise)
       }
-    } catch (e: Exception){
+    } catch (e: Exception) {
       ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
@@ -49,7 +48,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
           ModuleException.UNABLE_TO_DECODE.reject(promise)
         }
       }
-    } catch (e: Exception){
+    } catch (e: Exception) {
       ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
@@ -58,23 +57,35 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun sign(data: String, keyTag: String, promise: Promise) {
     try {
-      when (val result = COSEManager().signWithCOSE(
+      val result = COSEManager().signWithCOSE(
         data = kotlin.io.encoding.Base64.decode(data),
         alias = keyTag
-      )) {
+      )
+      when (result) {
         is SignWithCOSEResult.Failure -> {
-          if(result.msg === "Key doesn't exists!!") {
-            ModuleException.PUBLIC_KEY_NOT_FOUND.reject(promise)
-          } else {
-            ModuleException.UNABLE_TO_SIGN.reject(promise)
+          when (result.reason) {
+            FailureReason.NO_KEY -> ModuleException.PUBLIC_KEY_NOT_FOUND.reject(
+              promise,
+              Pair(ERROR_USER_INFO_KEY, result.reason.msg)
+            )
+
+            FailureReason.FAIL_TO_SIGN -> ModuleException.UNABLE_TO_SIGN.reject(
+              promise,
+              Pair(ERROR_USER_INFO_KEY, result.reason.msg)
+            )
+
+            else -> ModuleException.UNKNOWN_EXCEPTION.reject(
+              promise,
+              Pair(ERROR_USER_INFO_KEY, result.reason.msg)
+            )
           }
         }
+
         is SignWithCOSEResult.Success -> {
-          val base64Signature = kotlin.io.encoding.Base64.encode(result.signature)
-          promise.resolve(base64Signature)
+          promise.resolve(kotlin.io.encoding.Base64.encode(result.signature))
         }
       }
-    } catch (e: Exception){
+    } catch (e: Exception) {
       ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
@@ -88,7 +99,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
         jwk = publicKey.toString()
       )
       promise.resolve(result)
-    } catch (e: Exception){
+    } catch (e: Exception) {
       ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message ?: ""))
     }
   }
