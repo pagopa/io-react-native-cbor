@@ -50,7 +50,7 @@ class IoReactNativeCbor: NSObject {
     rejecter reject: @escaping RCTPromiseRejectBlock
   ) {
     DispatchQueue.global().async { [weak self] in
-      guard let self = self else {
+      guard self != nil else {
         ME.threadingError.reject(reject: reject)
         return
       }
@@ -60,33 +60,13 @@ class IoReactNativeCbor: NSObject {
         return
       }
       
-      do {
-        var privateKey: SecKey?
-        var status: OSStatus
-        
-        (privateKey, status) = keyExists(keyTag: keyTag)
-        
-        guard status == errSecSuccess else {
-          ME.publicKeyNotFound.reject(reject: reject)
-          return
-        }
-        
-        guard let privateKey = privateKey,
-              let publicKey = SecKeyCopyPublicKey(privateKey) else {
-          ME.publicKeyNotFound.reject(reject: reject)
-          return
-        }
-        
-        let se256 = try CryptoKit.SecureEnclave.P256.KeyAgreement.PrivateKey()
-        let publicKeyx963Data  = SecKeyCopyExternalRepresentation(publicKey, nil)! as Data
-        let coseKey = CoseKeyPrivate(publicKeyx963Data: publicKeyx963Data, secureEnclaveKeyID: se256.dataRepresentation)
-        
-        let signedPayload = CborCose.sign(data: data, privateKey: coseKey)
-        
-        resolve(signedPayload.base64EncodedString())
-      } catch {
-        ME.unexpected.reject(reject: reject)
+      guard let coseKey = CoseKeyPrivate(crv: .p256, keyTag: keyTag) else {
+        ME.publicKeyNotFound.reject(reject: reject)
+        return
       }
+      
+      let signedPayload = CborCose.sign(data: data, privateKey: coseKey)
+      resolve(signedPayload.base64EncodedString())
     }
   }
   
