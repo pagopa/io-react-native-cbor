@@ -88,8 +88,8 @@ enum DocumentTypeEnum {
 
 ### Error Codes
 
-| Type              | Platform                                      | Description                             |
-| ----------------- | --------------------------------------------- | --------------------------------------- |
-| INVALID_ENCODING  | Android/iOS                                   | Provided payload has incorrect encoding |
-| UNABLE_TO_DECODE  | The data does not contain a valid CBOR object |
-| UNKNOWN_EXCEPTION | Android/iOS                                   | Unexpected failure                      |
+| Type              | Platform    | Description                                   |
+| ----------------- | ----------- | --------------------------------------------- |
+| INVALID_ENCODING  | Android/iOS | Provided payload has incorrect encoding       |
+| UNABLE_TO_DECODE  | Android/iOS | The data does not contain a valid CBOR object |
+| UNKNOWN_EXCEPTION | Android/iOS | Unexpected failure                            |

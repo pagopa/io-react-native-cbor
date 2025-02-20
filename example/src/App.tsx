@@ -40,7 +40,7 @@ export default function App() {
     try {
       const decoded = await CBOR.decodeDocuments(data);
       console.log('✅ CBOR Decode Success\n', JSON.stringify(decoded, null, 2));
-      Alert.alert('✅ CBOR Decode Success', JSON.stringify(decoded, null, 2));
+      Alert.alert('✅ CBOR Decode Success');
     } catch (error: any) {
       console.log('❌ CBOR Decode Error\n', JSON.stringify(error, null, 2));
       Alert.alert('❌ CBOR Decode Error');

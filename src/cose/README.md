@@ -51,7 +51,3 @@ try {
 | UNABLE_TO_SIGN       | Android/iOS | It was not possible to sign the given string       |
 | THREADING_ERROR      | iOS         | Unexpected failure                                 |
 | UNKNOWN_EXCEPTION    | Android/iOS | Unexpected failure                                 |
-
-```
-
-```

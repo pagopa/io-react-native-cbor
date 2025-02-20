@@ -5,7 +5,7 @@ import { Documents, DocumentsFromString } from './schema';
  * Decode base64 encoded CBOR data to JSON object.
  *
  * If it is not possibile to decode the provided data, the promise will be rejected with
- * an instance of {@link CborError}.
+ * an instance of {@link CborFailure}.
  *
  * **NOTE**: this method does not handle nested CBOR data, which will need additional
  * parsing.
@@ -22,7 +22,7 @@ export const decode = async (data: string): Promise<any> => {
  * Decode base64 encoded CBOR data to mDOC object
  *
  * If it is not possibile to decode the provided data, the promise will be rejected with
- * an instance of {@link CborError}.
+ * an instance of {@link CborFailure}.
  *
  * @param data - The base64 encoded MDOC data
  * @returns The decoded data as mDOC object
