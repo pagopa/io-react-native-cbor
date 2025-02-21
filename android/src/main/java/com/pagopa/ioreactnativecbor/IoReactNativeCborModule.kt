@@ -31,10 +31,9 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
     }
 
     try {
-      val json = CBorParser(buffer).toJson()
-      json?.let {
+      CBorParser(buffer).toJson()?.let {
         promise.resolve(it)
-      } ?: run {
+      }?: run {
         ModuleException.UNABLE_TO_DECODE.reject(promise)
       }
     } catch (e: Exception) {

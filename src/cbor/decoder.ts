@@ -1,5 +1,6 @@
 import { IoReactNativeCbor } from '../utils/proxy';
 import { Documents, DocumentsFromString } from './schema';
+import { coerceToJSON } from './schema.utils';
 
 /**
  * Decode base64 encoded CBOR data to JSON object.
@@ -15,7 +16,7 @@ import { Documents, DocumentsFromString } from './schema';
  */
 export const decode = async (data: string): Promise<any> => {
   const jsonString = await IoReactNativeCbor.decode(data);
-  return JSON.parse(jsonString);
+  return await coerceToJSON.parseAsync(jsonString);
 };
 
 /**
@@ -28,6 +29,6 @@ export const decode = async (data: string): Promise<any> => {
  * @returns The decoded data as mDOC object
  */
 export const decodeDocuments = async (data: string): Promise<Documents> => {
-  const json = await IoReactNativeCbor.decodeDocuments(data);
-  return await DocumentsFromString.parseAsync(json);
+  const documentsString = await IoReactNativeCbor.decodeDocuments(data);
+  return await DocumentsFromString.parseAsync(documentsString);
 };
