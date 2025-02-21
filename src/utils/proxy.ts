@@ -6,7 +6,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const IoReactNativeCbor = NativeModules.IoReactNativeCbor
+export const IoReactNativeCbor = NativeModules.IoReactNativeCbor
   ? NativeModules.IoReactNativeCbor
   : new Proxy(
       {},
@@ -16,7 +16,3 @@ const IoReactNativeCbor = NativeModules.IoReactNativeCbor
         },
       }
     );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return IoReactNativeCbor.multiply(a, b);
-}

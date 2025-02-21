@@ -1,8 +1,8 @@
 {
   "name": "@pagopa/io-react-native-cbor",
-  "version": "0.1.0",
-  "description": "Native module for CBOR",
-  "source": "./src/index.tsx",
+  "version": "1.0.0",
+  "description": "Native support for CBOR",
+  "source": "./src/index",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "exports": {
@@ -54,15 +54,16 @@
   "author": "PagoPa (https://github.com/pagopa)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mastro993/pagopa-io-react-native-cbor/issues"
+    "url": "https://github.com/pagopa/io-react-native-cbor/issues"
   },
-  "homepage": "https://github.com/mastro993/pagopa-io-react-native-cbor#readme",
+  "homepage": "https://github.com/pagopa/io-react-native-cbor#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
+    "@pagopa/io-react-native-crypto": "^1.0.1",
     "@react-native-community/cli": "15.0.1",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^9.0.2",
@@ -86,6 +87,7 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "@pagopa/io-react-native-crypto": "*",
     "react": "*",
     "react-native": "*"
   },
@@ -182,5 +184,8 @@
     "type": "legacy-module",
     "languages": "kotlin-swift",
     "version": "0.45.5"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
   }
 }
