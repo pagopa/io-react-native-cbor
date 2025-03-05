@@ -61,6 +61,7 @@ jobs:
 
             echo "Gira comment markdown: $JIRA_COMMENT_MARKDOWN"          
             COMMENT_BODY=$JIRA_COMMENT_MARKDOWN
+          fi
 
           echo "Comment body: $COMMENT_BODY"
 
