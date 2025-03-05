@@ -27,8 +27,6 @@ jobs:
             echo "VALIDATION_RESULT=success" >> $GITHUB_ENV
           else
             echo "PR title is invalid."
-            COMMENT_BODY="${{ env.COMMENT_TITLE }}"$'\n\n'
-            COMMENT_BODY+=":x: The title is wrongly formatted. Example: conventional [TICKET] your title"$'\n'
             echo "VALIDATION_RESULT=failure" >> $GITHUB_ENV
           fi
 
@@ -61,6 +59,10 @@ jobs:
 
             echo "Gira comment markdown: $JIRA_COMMENT_MARKDOWN"          
             COMMENT_BODY=$JIRA_COMMENT_MARKDOWN
+          else 
+            COMMENT_BODY="${{ env.COMMENT_TITLE }}"$'\n\n'
+            COMMENT_BODY+=":x: The PR title is wrongly formatted."$'\n'
+            COMMENT_BODY+="Example: conventiona: [TICKET] your title"
           fi
 
           echo "Comment body: $COMMENT_BODY"
