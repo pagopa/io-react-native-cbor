@@ -62,7 +62,7 @@ jobs:
           else 
             COMMENT_BODY="${{ env.COMMENT_TITLE }}"$'\n\n'
             COMMENT_BODY+=":x: The PR title is wrongly formatted."$'\n'
-            COMMENT_BODY+="Example: conventiona: [TICKET] your title"
+            COMMENT_BODY+="Example -> chore: [TICKET] your title"
           fi
 
           echo "Comment body: $COMMENT_BODY"
