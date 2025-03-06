@@ -11,7 +11,6 @@ import it.pagopa.io.wallet.cbor.cose.COSEManager
 import it.pagopa.io.wallet.cbor.cose.FailureReason
 import it.pagopa.io.wallet.cbor.cose.SignWithCOSEResult
 import it.pagopa.io.wallet.cbor.parser.CBorParser
-import java.lang.RuntimeException
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
