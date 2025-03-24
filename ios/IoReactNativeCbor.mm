@@ -10,6 +10,10 @@ RCT_EXTERN_METHOD(decodeDocuments: (NSString)mdoc
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(decodeIssuerSigned: (NSString)mdoc
+                  resolver: (RCTPromiseResolveBlock)resolve
+                  rejecter: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(sign: (NSString)payload
                   keyTag: (NSString*)keyTag
                   resolver: (RCTPromiseResolveBlock)resolve

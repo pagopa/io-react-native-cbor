@@ -43,6 +43,24 @@ class IoReactNativeCbor: NSObject {
     resolve(json);
   }
   
+  @objc func decodeIssuerSigned(
+    _ mdoc: String,
+    resolver resolve: RCTPromiseResolveBlock,
+    rejecter reject: RCTPromiseRejectBlock
+  ) {
+    guard let data = Data(base64Encoded: mdoc) else {
+      ME.invalidEncoding.reject(reject: reject)
+      return
+    }
+    
+    guard let json = CborCose.issuerSignedCborToJson(data: data) else {
+      ME.unableToDecode.reject(reject: reject)
+      return
+    }
+    
+    resolve(json);
+  }
+  
   @objc func sign(
     _ payloadData: String,
     keyTag: String,

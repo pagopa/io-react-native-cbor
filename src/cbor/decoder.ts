@@ -1,5 +1,10 @@
 import { IoReactNativeCbor } from '../utils/proxy';
-import { Documents, DocumentsFromString } from './schema';
+import {
+  Documents,
+  DocumentsFromString,
+  IssuerSigned,
+  IssuerSignedFromString,
+} from './schema';
 import { coerceToJSON } from './schema.utils';
 
 /**
@@ -31,4 +36,20 @@ export const decode = async (data: string): Promise<any> => {
 export const decodeDocuments = async (data: string): Promise<Documents> => {
   const documentsString = await IoReactNativeCbor.decodeDocuments(data);
   return await DocumentsFromString.parseAsync(documentsString);
+};
+
+/**
+ * Extract and decode the {@link IssuerSigned} with the {@link IssuerAuth} decoded from base64 encoded CBOR
+ *
+ * If it is not possibile to decode the provided data, the promise will be rejected with
+ * an instance of {@link CborFailure}.
+ *
+ * @param data - The base64 encoded MDOC data
+ * @returns The decoded {@link IssuerSigned} contained in the mDOC object
+ */
+export const decodeIssuerSigned = async (
+  data: string
+): Promise<IssuerSigned> => {
+  const documentsString = await IoReactNativeCbor.decodeIssuerSigned(data);
+  return await IssuerSignedFromString.parseAsync(documentsString);
 };

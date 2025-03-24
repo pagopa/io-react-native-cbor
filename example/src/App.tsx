@@ -9,6 +9,7 @@ import mdlCbor from './mocks/mdl';
 import moreDocsCbor from './mocks/moreDocs';
 import moreDocsIssuerAuthCbor from './mocks/moreDocsIssuerAuth';
 import oneDocCbor from './mocks/oneDoc';
+import oneDocIssuerAuth from './mocks/oneDocIssuerAuth';
 import { styles } from './styles';
 
 const KEYTAG = 'TEST_KEYTAG';
@@ -44,6 +45,27 @@ export default function App() {
     } catch (error: any) {
       console.log('❌ CBOR Decode Error\n', JSON.stringify(error, null, 2));
       Alert.alert('❌ CBOR Decode Error');
+    }
+  };
+
+  const handleDecodeIssuerSigned = (data: string) => async () => {
+    try {
+      const decoded = await CBOR.decodeIssuerSigned(data);
+      console.log(
+        '✅ CBOR Issuer Signed With Decoded Issuer Auth Decode Success\n',
+        JSON.stringify(decoded, null, 2)
+      );
+      Alert.alert(
+        '✅ CBOR Issuer Signed With Decoded Issuer Auth Decode Success'
+      );
+    } catch (error: any) {
+      console.log(
+        '❌ CBOR Issuer Signed With Decoded Issuer Auth Decode Error\n',
+        JSON.stringify(error, null, 2)
+      );
+      Alert.alert(
+        '❌ CBOR Issuer Signed With Decoded Issuer Auth Decode Error'
+      );
     }
   };
 
@@ -87,6 +109,10 @@ export default function App() {
         <Button
           title="Decode multiple docs with issuer auth"
           onPress={handleDecode(moreDocsIssuerAuthCbor)}
+        />
+        <Button
+          title="Decode issuer signed from single doc with decoded issuer auth"
+          onPress={handleDecodeIssuerSigned(oneDocIssuerAuth)}
         />
         <Button title="Decode single doc" onPress={handleDecode(oneDocCbor)} />
         <Text style={styles.label}>COSE</Text>
