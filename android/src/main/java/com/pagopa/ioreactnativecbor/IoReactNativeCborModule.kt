@@ -63,9 +63,9 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
 
   @OptIn(ExperimentalEncodingApi::class)
   @ReactMethod
-  fun decodeIssuerSigned(data: String, promise: Promise) {
+  fun decodeIssuerSigned(issuerSigned: String, promise: Promise) {
     val buffer = try {
-      kotlin.io.encoding.Base64.decode(data)
+      kotlin.io.encoding.Base64.decode(issuerSigned)
     } catch (e: Exception) {
       ModuleException.INVALID_ENCODING.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
       return;

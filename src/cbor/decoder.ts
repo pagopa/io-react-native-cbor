@@ -44,12 +44,13 @@ export const decodeDocuments = async (data: string): Promise<Documents> => {
  * If it is not possibile to decode the provided data, the promise will be rejected with
  * an instance of {@link CborFailure}.
  *
- * @param data - The base64 encoded MDOC data
+ * @param issuerSigned - The base64 encoded MDOC data
  * @returns The decoded {@link IssuerSigned} contained in the mDOC object
  */
 export const decodeIssuerSigned = async (
-  data: string
+  issuerSigned: string
 ): Promise<IssuerSigned> => {
-  const documentsString = await IoReactNativeCbor.decodeIssuerSigned(data);
-  return await IssuerSignedFromString.parseAsync(documentsString);
+  const decodedIssuerSignedString =
+    await IoReactNativeCbor.decodeIssuerSigned(issuerSigned);
+  return await IssuerSignedFromString.parseAsync(decodedIssuerSignedString);
 };

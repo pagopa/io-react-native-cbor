@@ -12,7 +12,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - IOWalletCBOR (= 0.0.8)
+    - IOWalletCBOR (~> 0.0.8)
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
@@ -1776,7 +1776,7 @@ SPEC CHECKSUMS:
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 1949ca944b195a8bde7cbf6316b9068e19cf53c6
   IOWalletCBOR: d2f114877d7c0f15e806efa252b45a20d588b685
-  pagopa-io-react-native-cbor: 5e4f897386a6c97da7debcaad426dd6e158de7e2
+  pagopa-io-react-native-cbor: 6556f4144ba77bf277d05828922c6ac622ddeaa6
   pagopa-io-react-native-crypto: 18dc3803c8b69eb9fd8bd589c3089b204e4d98b4
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
   RCTDeprecation: 063fc281b30b7dc944c98fe53a7e266dab1a8706

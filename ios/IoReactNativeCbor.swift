@@ -44,11 +44,11 @@ class IoReactNativeCbor: NSObject {
   }
   
   @objc func decodeIssuerSigned(
-    _ mdoc: String,
+    _ issuerSigned: String,
     resolver resolve: RCTPromiseResolveBlock,
     rejecter reject: RCTPromiseRejectBlock
   ) {
-    guard let data = Data(base64Encoded: mdoc) else {
+    guard let data = Data(base64Encoded: issuerSigned) else {
       ME.invalidEncoding.reject(reject: reject)
       return
     }
