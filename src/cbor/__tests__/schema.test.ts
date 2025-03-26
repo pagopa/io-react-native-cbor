@@ -25,7 +25,40 @@ describe('Documents schema', () => {
                 },
               ]),
             },
-            issuerAuth: '123456789',
+            issuerAuth: {
+              rawValue: '12345',
+              protectedHeader: 'QWERTY=',
+              unprotectedHeader: [
+                {
+                  algorithm: '33',
+                  keyId: '311229',
+                },
+              ],
+              payload: {
+                docType: DocumentTypeEnum.MDL,
+                version: '1.0.5',
+                validityInfo: {
+                  signed: new Date(2025, 1, 25),
+                  validFrom: '2025-01-25',
+                  validUntil: '2026-01-25',
+                },
+                digestAlgorithm: 'HMAC',
+                deviceKeyInfo: {
+                  deviceKey: {
+                    kty: 'EC',
+                    crv: 'P-256',
+                    x: '0384fee',
+                    y: '0384fee',
+                  },
+                },
+                valueDigests: {
+                  'org.iso.18013.5.1.mDL': {
+                    '0': 'aaee5e6ea58e67',
+                  },
+                },
+              },
+              signature: '221123ffedba',
+            },
           },
         },
       ]),
@@ -54,7 +87,40 @@ describe('Documents schema', () => {
                 },
               ],
             },
-            issuerAuth: '123456789',
+            issuerAuth: {
+              rawValue: '12345',
+              protectedHeader: 'QWERTY=',
+              unprotectedHeader: [
+                {
+                  algorithm: '33',
+                  keyId: '311229',
+                },
+              ],
+              payload: {
+                docType: DocumentTypeEnum.MDL,
+                version: '1.0.5',
+                validityInfo: {
+                  signed: new Date(2025, 1, 25),
+                  validFrom: new Date(Date.parse('2025-01-25')),
+                  validUntil: new Date(Date.parse('2026-01-25')),
+                },
+                digestAlgorithm: 'HMAC',
+                deviceKeyInfo: {
+                  deviceKey: {
+                    kty: 'EC',
+                    crv: 'P-256',
+                    x: '0384fee',
+                    y: '0384fee',
+                  },
+                },
+                valueDigests: {
+                  'org.iso.18013.5.1.mDL': {
+                    '0': 'aaee5e6ea58e67',
+                  },
+                },
+              },
+              signature: '221123ffedba',
+            },
           },
         },
       ],

@@ -1,4 +1,4 @@
-export { decode, decodeDocuments } from './decoder';
+export { decode, decodeDocuments, decodeIssuerSigned } from './decoder';
 export {
   DocumentValue,
   Documents,
