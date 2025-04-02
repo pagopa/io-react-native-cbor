@@ -123,6 +123,11 @@ class IoReactNativeCbor: NSObject {
     resolver resolve: RCTPromiseResolveBlock,
     rejecter reject: RCTPromiseRejectBlock
   ) {
+    
+    ME.unexpected.reject(reject: reject)
+    return
+/*
+    TODO: Implement proper conversion and device response generation
     do {
       let sessionTranscript = Proximity.shared.generateOID4VPSessionTranscriptCBOR(
           clientId: clientId,
@@ -131,8 +136,7 @@ class IoReactNativeCbor: NSObject {
           mdocGeneratedNonce: mdocGeneratedNonce
       )
 
-      let documentMap : [String : ([UInt8], [UInt8])] = try documents.reduce(into: [:], {(map, document) in
-        let documentParsed = try JSONDecoder().decode(DocRequested.self ,from: JSONSerialization.data(withJSONObject: document, options: []))
+      let documentMap : [String : ([UInt8], [UInt8])] = [:] //parseDocRequested(array: documents).reduce(into: [:], {(map, document) in
         let key = try LibIso18013DAOKeyChain().getDocumentByIdentifier(identifier: documentParsed.alias ?? "").deviceKeyData
         map[documentParsed.docType!] = (documentParsed.issuerSignedContent!, key)
         
@@ -148,7 +152,7 @@ class IoReactNativeCbor: NSObject {
     } catch {
       ME.unexpected.reject(reject: reject)
     }
-    
+*/
   }
   
   private func keyExists(keyTag: String) -> (key: SecKey?, status: OSStatus) {
@@ -233,22 +237,22 @@ class IoReactNativeCbor: NSObject {
     var docType : String?
   }
   
-  //private func parseDocRequeted(_ array : NSArray) throws -> [DocRequested] {
-  //  return try array.compactMap { (element) -> DocRequested? in
-  //    guard let dict : NSDictionary = element as? NSDictionary else { return nil }
-  //    let docRequested : DocRequested = DocRequested()
-  //    guard
-  //      let issuerSignedContent = dict["issuerSignedContent"] as? String,
-  //      let alias = dict["alias"] as? String,
-  //      let docType = dict["docType"] as? String
-  //    else { throw ModuleException.unableToDecode.error() }
-  //
-  //    docRequested.alias = alias
-  //    docRequested.issuerSignedContent = issuerSignedContent.byteArray
-  //    docRequested.docType = docType
-  //
-  //    return docRequested
-  //  }
-  //}
+  private func parseDocRequeted(_ array : NSArray) throws -> [DocRequested] {
+    return try array.compactMap { (element) -> DocRequested? in
+      guard let dict : NSDictionary = element as? NSDictionary else { return nil }
+      let docRequested : DocRequested = DocRequested()
+      guard
+        let issuerSignedContent = dict["issuerSignedContent"] as? String,
+        let alias = dict["alias"] as? String,
+        let docType = dict["docType"] as? String
+      else { throw ModuleException.unableToDecode.error() }
   
+      docRequested.alias = alias
+      docRequested.issuerSignedContent = issuerSignedContent.byteArray
+      docRequested.docType = docType
+  
+      return docRequested
+    }
+  }
+
 }

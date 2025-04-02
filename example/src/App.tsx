@@ -141,9 +141,9 @@ export default function App() {
         <Text style={styles.label}>COSE</Text>
         <Button title="Test sign" onPress={handleTestSign} />
         <Button title="Test verify" onPress={handleTestVerify} />
-        <Text style={styles.label}>OID4VP</Text>
+        <Text style={styles.label}>ISO18013</Text>
         <Button
-          title="Test Generate Response"
+          title="Test Generate OID4VP Response"
           onPress={handleGenerateResponse}
         />
       </View>
