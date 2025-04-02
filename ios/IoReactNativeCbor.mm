@@ -24,6 +24,15 @@ RCT_EXTERN_METHOD(verify: (NSString)sign1Data
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(generateOID4VPResponse: (NSString)clientId
+                  responseUri: (NSString*)responseUri
+                  authorizationRequestNonce: (NSString*)authorizationRequestNonce
+                  mdocGeneratedNonce: (NSString*)mdocGeneratedNonce
+                  documents: (NSArray*)documents
+                  fieldRequestedAndAccepted: (NSString*)fieldRequestedAndAccepted
+                  resolver: (RCTPromiseResolveBlock)resolve
+                  rejecter: (RCTPromiseRejectBlock)reject)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;

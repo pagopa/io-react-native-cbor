@@ -1,4 +1,4 @@
-import { CBOR, COSE } from '@pagopa/io-react-native-cbor';
+import { CBOR, COSE, ISO18013 } from '@pagopa/io-react-native-cbor';
 import {
   generate,
   getPublicKey,
@@ -10,6 +10,7 @@ import moreDocsCbor from './mocks/moreDocs';
 import moreDocsIssuerAuthCbor from './mocks/moreDocsIssuerAuth';
 import oneDocCbor from './mocks/oneDoc';
 import oneDocIssuerAuth from './mocks/oneDocIssuerAuth';
+import deviceRequest from './mocks/deviceRequest';
 import { styles } from './styles';
 
 const KEYTAG = 'TEST_KEYTAG';
@@ -97,6 +98,28 @@ export default function App() {
     }
   };
 
+  const handleGenerateResponse = async () => {
+    try {
+      await generateKeyIfNotExists(KEYTAG);
+      const result = await ISO18013.generateOID4VPDeviceResponse(
+        deviceRequest.request.clientId,
+        deviceRequest.request.responseUri,
+        deviceRequest.request.authorizationRequestNonce,
+        deviceRequest.request.mdocGeneratedNonce,
+        deviceRequest.documents,
+        deviceRequest.fieldRequestedAndAccepted
+      );
+      console.log(result);
+      Alert.alert('✅ Device Response Generation Success');
+    } catch (error: any) {
+      console.log(
+        '❌ Device Response Generation Error\n',
+        JSON.stringify(error, null, 2)
+      );
+      Alert.alert('❌ Device Response Generation Error', error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -118,6 +141,11 @@ export default function App() {
         <Text style={styles.label}>COSE</Text>
         <Button title="Test sign" onPress={handleTestSign} />
         <Button title="Test verify" onPress={handleTestVerify} />
+        <Text style={styles.label}>OID4VP</Text>
+        <Button
+          title="Test Generate Response"
+          onPress={handleGenerateResponse}
+        />
       </View>
     </SafeAreaView>
   );
