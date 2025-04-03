@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/io-react-native-cbor",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Native support for CBOR",
   "source": "./src/index",
   "main": "./lib/commonjs/index.js",
