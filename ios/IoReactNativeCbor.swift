@@ -1,4 +1,5 @@
 import IOWalletCBOR
+import IOWalletProximity
 import CryptoKit
 
 @objc(IoReactNativeCbor)
@@ -112,6 +113,48 @@ class IoReactNativeCbor: NSObject {
     }
   }
   
+  @objc func generateOID4VPDeviceResponse(
+    _ clientId: String,
+    responseUri: String,
+    authorizationRequestNonce: String,
+    mdocGeneratedNonce: String,
+    documents: NSArray,
+    fieldRequestedAndAccepted: String,
+    resolver resolve: RCTPromiseResolveBlock,
+    rejecter reject: RCTPromiseRejectBlock
+  ) {
+    
+    ME.unexpected.reject(reject: reject)
+    return
+/*
+    TODO: Implement proper conversion and device response generation
+    do {
+      let sessionTranscript = Proximity.shared.generateOID4VPSessionTranscriptCBOR(
+          clientId: clientId,
+          responseUri: responseUri,
+          authorizationRequestNonce: authorizationRequestNonce,
+          mdocGeneratedNonce: mdocGeneratedNonce
+      )
+
+      let documentMap : [String : ([UInt8], [UInt8])] = [:] //parseDocRequested(array: documents).reduce(into: [:], {(map, document) in
+        let key = try LibIso18013DAOKeyChain().getDocumentByIdentifier(identifier: documentParsed.alias ?? "").deviceKeyData
+        map[documentParsed.docType!] = (documentParsed.issuerSignedContent!, key)
+        
+      })
+      
+      let items: [String: [String: [String: Bool]]] = try JSONDecoder().decode([String: [String: [String: Bool]]].self, from: JSONSerialization.data(withJSONObject: fieldRequestedAndAccepted))
+      
+      let response = Proximity.shared.generateDeviceResponseFromData(allowed: true, items: items, documents: documentMap, sessionTranscript: sessionTranscript)
+      
+      resolve(response)
+      
+      
+    } catch {
+      ME.unexpected.reject(reject: reject)
+    }
+*/
+  }
+  
   private func keyExists(keyTag: String) -> (key: SecKey?, status: OSStatus) {
     let getQuery = privateKeyKeychainQuery(keyTag: keyTag)
     var item: CFTypeRef?
@@ -188,4 +231,28 @@ class IoReactNativeCbor: NSObject {
     }
   }
   
+  private class DocRequested : Decodable {
+    var issuerSignedContent : [UInt8]?
+    var alias : String?
+    var docType : String?
+  }
+  
+  private func parseDocRequeted(_ array : NSArray) throws -> [DocRequested] {
+    return try array.compactMap { (element) -> DocRequested? in
+      guard let dict : NSDictionary = element as? NSDictionary else { return nil }
+      let docRequested : DocRequested = DocRequested()
+      guard
+        let issuerSignedContent = dict["issuerSignedContent"] as? String,
+        let alias = dict["alias"] as? String,
+        let docType = dict["docType"] as? String
+      else { throw ModuleException.unableToDecode.error() }
+  
+      docRequested.alias = alias
+      docRequested.issuerSignedContent = issuerSignedContent.byteArray
+      docRequested.docType = docType
+  
+      return docRequested
+    }
+  }
+
 }

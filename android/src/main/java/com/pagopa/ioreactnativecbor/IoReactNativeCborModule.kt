@@ -4,13 +4,18 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import it.pagopa.io.wallet.cbor.cose.COSEManager
 import it.pagopa.io.wallet.cbor.cose.FailureReason
 import it.pagopa.io.wallet.cbor.cose.SignWithCOSEResult
 import it.pagopa.io.wallet.cbor.parser.CBorParser
+import it.pagopa.io.wallet.proximity.OpenID4VP
+import it.pagopa.io.wallet.proximity.request.DocRequested
+import it.pagopa.io.wallet.proximity.response.ResponseGenerator
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
@@ -148,9 +153,62 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @OptIn(ExperimentalEncodingApi::class)
+  @ReactMethod
+  fun generateOID4VPDeviceResponse(clientId : String, responseUri : String, authorizationRequestNonce : String,
+                                   mdocGeneratedNonce : String, documents : ReadableArray,
+                                   fieldRequestedAndAccepted : String, promise : Promise) {
+    try {
+      val sessionTranscript = OpenID4VP(
+        clientId,
+        responseUri,
+        authorizationRequestNonce,
+        mdocGeneratedNonce
+      ).createSessionTranscript()
+
+      val documentsParsed = parseDocRequested(documents)
+
+      val responseGenerator = ResponseGenerator(sessionTranscript)
+      responseGenerator.createResponse(
+        documentsParsed,
+        fieldRequestedAndAccepted,
+        object : ResponseGenerator.Response {
+          override fun onResponseGenerated(response: ByteArray) {
+            promise.resolve(kotlin.io.encoding.Base64.encode(response))
+          }
+
+          override fun onError(message: String) {
+            ModuleException.UNABLE_TO_GENERATE_RESPONSE.reject(promise, Pair(ERROR_USER_INFO_KEY, message))
+          }
+        }
+      )
+    } catch (e : Exception) {
+      ModuleException.UNKNOWN_EXCEPTION.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
+    }
+  }
+
   companion object {
     const val NAME = "IoReactNativeCbor"
     const val ERROR_USER_INFO_KEY = "error"
+
+    private fun parseDocRequested(array: ReadableArray): Array<DocRequested> {
+      val retVal = mutableListOf<DocRequested>()
+      for (i in 0..<array.size()) {
+        val entry = array.getMap(i)
+        if (
+          !entry.hasKey("alias") || entry.getType("alias") != ReadableType.String ||
+          !entry.hasKey("issuerSignedContent") || entry.getType("issuerSignedContent") != ReadableType.String ||
+          !entry.hasKey("docType") || entry.getType("docType") != ReadableType.String
+        ) throw ModuleException.UNABLE_TO_DECODE.ex
+        retVal.add(DocRequested(
+          alias = entry.getString("alias")!!,
+          issuerSignedContent = entry.getString("issuerSignedContent")!!,
+          docType = entry.getString("docType")!!
+        ))
+      }
+
+      return retVal.toTypedArray()
+    }
 
     private enum class ModuleException(
       val ex: Exception
@@ -159,6 +217,7 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
       PUBLIC_KEY_NOT_FOUND(Exception("PUBLIC_KEY_NOT_FOUND")),
       UNABLE_TO_SIGN(Exception("UNABLE_TO_SIGN")),
       INVALID_ENCODING(Exception("INVALID_ENCODING")),
+      UNABLE_TO_GENERATE_RESPONSE(Exception("UNABLE_TO_GENERATE_RESPONSE")),
       UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 
       fun reject(
