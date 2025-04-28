@@ -1,4 +1,4 @@
-export default {
+const correctDocument = {
   request: {
     clientId:
       'https://simple.demo.connector.io/openid4vp/authorization-response',
@@ -16,5 +16,31 @@ export default {
     },
   ],
   fieldRequestedAndAccepted:
-    '{"org.iso.18013.5.1.mDL":{"height":true,"weight":true,"portrait":true,"birth_date":true,"eye_colour":true,"given_name":true,"issue_date":true,"age_over_18":true,"age_over_21":true,"birth_place":true,"expiry_date":true,"family_name":true,"hair_colour":true,"nationality":true,"age_in_years":true,"resident_city":true,"age_birth_year":true,"resident_state":true,"document_number":true,"issuing_country":true,"resident_address":true,"resident_country":true,"issuing_authority":true,"driving_privileges":true,"issuing_jurisdiction":true,"resident_postal_code":true,"signature_usual_mark":true,"administrative_number":true,"portrait_capture_date":true,"un_distinguishing_sign":true,"given_name_national_character":true,"family_name_national_character":true}}"',
+    '{"org.iso.18013.5.1.mDL":{"org.iso.18013.5.1":{"height":true,"weight":true,"portrait":true,"birth_date":true,"eye_colour":true,"given_name":true,"issue_date":true,"age_over_18":true,"age_over_21":true,"birth_place":true,"expiry_date":true,"family_name":true,"hair_colour":true,"nationality":true,"age_in_years":true,"resident_city":true,"age_birth_year":true,"resident_state":true,"document_number":true,"issuing_country":true,"resident_address":true,"resident_country":true,"issuing_authority":true,"driving_privileges":true,"issuing_jurisdiction":true,"resident_postal_code":true,"signature_usual_mark":true,"administrative_number":true,"portrait_capture_date":true,"un_distinguishing_sign":true,"given_name_national_character":true,"family_name_national_character":true}}}',
+};
+
+export default correctDocument;
+
+export const wrongDocRequest = {
+  ...correctDocument,
+  documents: [
+    {
+      ...correctDocument.documents[0]!,
+      alias: 'AAA',
+    },
+  ],
+};
+
+export const incompleteDocRequest = {
+  ...correctDocument,
+  documents: [
+    {
+      alias: 'AAA',
+    },
+  ],
+};
+
+export const wrongFieldRequestedAndAccepted = {
+  ...correctDocument,
+  fieldRequestedAndAccepted: '',
 };

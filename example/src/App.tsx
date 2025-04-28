@@ -10,7 +10,11 @@ import moreDocsCbor from './mocks/moreDocs';
 import moreDocsIssuerAuthCbor from './mocks/moreDocsIssuerAuth';
 import oneDocCbor from './mocks/oneDoc';
 import oneDocIssuerAuth from './mocks/oneDocIssuerAuth';
-import deviceRequest from './mocks/deviceRequest';
+import deviceRequest, {
+  wrongDocRequest,
+  wrongFieldRequestedAndAccepted,
+  incompleteDocRequest,
+} from './mocks/deviceRequest';
 import { styles } from './styles';
 
 const KEYTAG = 'TEST_KEYTAG';
@@ -120,6 +124,77 @@ export default function App() {
     }
   };
 
+  const handleGenerateResponseWrongDocRequested = async () => {
+    try {
+      await generateKeyIfNotExists(KEYTAG);
+      const result = await ISO18013.generateOID4VPDeviceResponse(
+        wrongDocRequest.request.clientId,
+        wrongDocRequest.request.responseUri,
+        wrongDocRequest.request.authorizationRequestNonce,
+        wrongDocRequest.request.mdocGeneratedNonce,
+        wrongDocRequest.documents,
+        wrongDocRequest.fieldRequestedAndAccepted
+      );
+      console.log(result);
+      Alert.alert('❌ Device Response Generation Success');
+    } catch (error: any) {
+      console.log(
+        '✅ Device Response Generation Error\n',
+        JSON.stringify(error, null, 2)
+      );
+      Alert.alert('✅ Device Response Generation Error', error.message);
+    }
+  };
+
+  const handleGenerateResponseIncompleteDocRequested = async () => {
+    try {
+      await generateKeyIfNotExists(KEYTAG);
+      const result = await ISO18013.generateOID4VPDeviceResponse(
+        incompleteDocRequest.request.clientId,
+        incompleteDocRequest.request.responseUri,
+        incompleteDocRequest.request.authorizationRequestNonce,
+        incompleteDocRequest.request.mdocGeneratedNonce,
+        //Cast needed to induce error scenario
+        incompleteDocRequest.documents as {
+          alias: string;
+          docType: string;
+          issuerSignedContent: string;
+        }[],
+        incompleteDocRequest.fieldRequestedAndAccepted
+      );
+      console.log(result);
+      Alert.alert('❌ Device Response Generation Success');
+    } catch (error: any) {
+      console.log(
+        '✅ Device Response Generation Error\n',
+        JSON.stringify(error, null, 2)
+      );
+      Alert.alert('✅ Device Response Generation Error', error.message);
+    }
+  };
+
+  const handleGenerateResponseWrongFieldRequestedAndAccepted = async () => {
+    try {
+      await generateKeyIfNotExists(KEYTAG);
+      const result = await ISO18013.generateOID4VPDeviceResponse(
+        wrongFieldRequestedAndAccepted.request.clientId,
+        wrongFieldRequestedAndAccepted.request.responseUri,
+        wrongFieldRequestedAndAccepted.request.authorizationRequestNonce,
+        wrongFieldRequestedAndAccepted.request.mdocGeneratedNonce,
+        wrongFieldRequestedAndAccepted.documents,
+        wrongFieldRequestedAndAccepted.fieldRequestedAndAccepted
+      );
+      console.log(result);
+      Alert.alert('❌ Device Response Generation Success');
+    } catch (error: any) {
+      console.log(
+        '✅ Device Response Generation Error\n',
+        JSON.stringify(error, null, 2)
+      );
+      Alert.alert('✅ Device Response Generation Error', error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -145,6 +220,18 @@ export default function App() {
         <Button
           title="Test Generate OID4VP Response"
           onPress={handleGenerateResponse}
+        />
+        <Button
+          title="Test Generate OID4VP Response (wrong DocRequested)"
+          onPress={handleGenerateResponseWrongDocRequested}
+        />
+        <Button
+          title="Test Generate OID4VP Response (incomplete DocRequested)"
+          onPress={handleGenerateResponseIncompleteDocRequested}
+        />
+        <Button
+          title="Test Generate OID4VP Response (wrong FieldsRequestedAndAccepted)"
+          onPress={handleGenerateResponseWrongFieldRequestedAndAccepted}
         />
       </View>
     </SafeAreaView>

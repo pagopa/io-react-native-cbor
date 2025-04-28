@@ -158,16 +158,26 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
   fun generateOID4VPDeviceResponse(clientId : String, responseUri : String, authorizationRequestNonce : String,
                                    mdocGeneratedNonce : String, documents : ReadableArray,
                                    fieldRequestedAndAccepted : String, promise : Promise) {
-    try {
-      val sessionTranscript = OpenID4VP(
+    val sessionTranscript = try {
+      OpenID4VP(
         clientId,
         responseUri,
         authorizationRequestNonce,
         mdocGeneratedNonce
       ).createSessionTranscript()
+    } catch (e : Exception) {
+      ModuleException.UNABLE_TO_GENERATE_TRANSCRIPT.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
+      return
+    }
 
-      val documentsParsed = parseDocRequested(documents)
+    val documentsParsed = try {
+      parseDocRequested(documents)
+    } catch (e : Exception) {
+      ModuleException.INVALID_DOC_REQUESTED.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
+      return
+    }
 
+    try {
       val responseGenerator = ResponseGenerator(sessionTranscript)
       responseGenerator.createResponse(
         documentsParsed,
@@ -217,6 +227,8 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
       PUBLIC_KEY_NOT_FOUND(Exception("PUBLIC_KEY_NOT_FOUND")),
       UNABLE_TO_SIGN(Exception("UNABLE_TO_SIGN")),
       INVALID_ENCODING(Exception("INVALID_ENCODING")),
+      UNABLE_TO_GENERATE_TRANSCRIPT(Exception("UNABLE_TO_GENERATE_TRANSCRIPT")),
+      INVALID_DOC_REQUESTED(Exception("INVALID_DOC_REQUESTED")),
       UNABLE_TO_GENERATE_RESPONSE(Exception("UNABLE_TO_GENERATE_RESPONSE")),
       UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 
