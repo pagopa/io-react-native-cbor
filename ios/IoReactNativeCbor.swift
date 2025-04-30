@@ -124,10 +124,6 @@ class IoReactNativeCbor: NSObject {
     rejecter reject: RCTPromiseRejectBlock
   ) {
     
-    ME.unexpected.reject(reject: reject)
-    return
-/*
-    TODO: Implement proper conversion and device response generation
     do {
       let sessionTranscript = Proximity.shared.generateOID4VPSessionTranscriptCBOR(
           clientId: clientId,
@@ -136,23 +132,30 @@ class IoReactNativeCbor: NSObject {
           mdocGeneratedNonce: mdocGeneratedNonce
       )
 
-      let documentMap : [String : ([UInt8], [UInt8])] = [:] //parseDocRequested(array: documents).reduce(into: [:], {(map, document) in
-        let key = try LibIso18013DAOKeyChain().getDocumentByIdentifier(identifier: documentParsed.alias ?? "").deviceKeyData
-        map[documentParsed.docType!] = (documentParsed.issuerSignedContent!, key)
-        
-      })
+      let documentsAsProximityDocument : [ProximityDocument] = try parseDocRequested(documents).reduce(into: []) { partialResult, document in
+        guard let proximityDocument = ProximityDocument(docType: document.docType, issuerSigned: document.issuerSignedContent, deviceKeyTag: document.alias) else {
+          throw ME.invalidDocRequested.error()
+        }
+        partialResult.append(proximityDocument)
+      }
       
-      let items: [String: [String: [String: Bool]]] = try JSONDecoder().decode([String: [String: [String: Bool]]].self, from: JSONSerialization.data(withJSONObject: fieldRequestedAndAccepted))
+      let items = try JSONDecoder().decode([String : [String : [String : Bool]]].self, from: Data(fieldRequestedAndAccepted.utf8))
       
-      let response = Proximity.shared.generateDeviceResponseFromData(allowed: true, items: items, documents: documentMap, sessionTranscript: sessionTranscript)
+      guard let response = Proximity.shared.generateDeviceResponse(allowed: true, items: items, documents: documentsAsProximityDocument, sessionTranscript: sessionTranscript) else {
+        ME.unableToGenerateResponse.reject(reject: reject)
+        return
+      }
       
-      resolve(response)
+      resolve(Data(response).base64EncodedString())
+
       
-      
+    } catch let error as NSError where error.domain == ME.invalidDocRequested.rawValue {
+      ME.invalidDocRequested.reject(reject: reject)
+    } catch let error as DecodingError {
+      ME.invalidItems.reject(reject: reject)
     } catch {
       ME.unexpected.reject(reject: reject)
     }
-*/
   }
   
   private func keyExists(keyTag: String) -> (key: SecKey?, status: OSStatus) {
@@ -204,6 +207,9 @@ class IoReactNativeCbor: NSObject {
     case unableToSign = "UNABLE_TO_SIGN"
     case invalidEncoding = "INVALID_ENCODING"
     case threadingError = "THREADING_ERROR"
+    case invalidDocRequested = "DOC_REQUESTED_PARSING_EXCEPTION"
+    case unableToGenerateResponse = "UNABLE_TO_GENERATE_RESPONSE"
+    case invalidItems = "REQUESTED_ITEMS_PARSING_EXCEPTION"
     case unexpected = "UNEXPECTED_ERROR"
     
     func error(userInfo: [String : Any]? = nil) -> NSError {
@@ -218,6 +224,12 @@ class IoReactNativeCbor: NSObject {
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       case .threadingError:
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
+      case .invalidDocRequested:
+        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
+      case .unableToGenerateResponse:
+        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
+      case .invalidItems:
+        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       case .unexpected:
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       }
@@ -231,27 +243,29 @@ class IoReactNativeCbor: NSObject {
     }
   }
   
-  private class DocRequested : Decodable {
-    var issuerSignedContent : [UInt8]?
-    var alias : String?
-    var docType : String?
+  private class DocRequested {
+    var issuerSignedContent : [UInt8]
+    var alias : String
+    var docType : String
+    
+    public init(issuerSignedContent: [UInt8], alias: String, docType: String) {
+      self.issuerSignedContent = issuerSignedContent
+      self.alias = alias
+      self.docType = docType
+    }
   }
   
-  private func parseDocRequeted(_ array : NSArray) throws -> [DocRequested] {
-    return try array.compactMap { (element) -> DocRequested? in
-      guard let dict : NSDictionary = element as? NSDictionary else { return nil }
-      let docRequested : DocRequested = DocRequested()
+  private func parseDocRequested(_ array : NSArray) throws -> [DocRequested] {
+    return try array.compactMap { (element) -> DocRequested in
+      guard let dict : NSDictionary = element as? NSDictionary else { throw ModuleException.unableToDecode.error() }
       guard
         let issuerSignedContent = dict["issuerSignedContent"] as? String,
         let alias = dict["alias"] as? String,
-        let docType = dict["docType"] as? String
-      else { throw ModuleException.unableToDecode.error() }
+        let docType = dict["docType"] as? String,
+        let issuerSignedBytesData = Data(base64Encoded: issuerSignedContent)
+      else { throw ModuleException.invalidDocRequested.error() }
   
-      docRequested.alias = alias
-      docRequested.issuerSignedContent = issuerSignedContent.byteArray
-      docRequested.docType = docType
-  
-      return docRequested
+      return DocRequested(issuerSignedContent: Array(issuerSignedBytesData), alias: alias, docType: docType)
     }
   }
 
