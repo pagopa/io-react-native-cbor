@@ -2,7 +2,7 @@ import { CBOR, COSE, ISO18013 } from '@pagopa/io-react-native-cbor';
 import {
   generate,
   getPublicKey,
-  PublicKey,
+  type PublicKey,
 } from '@pagopa/io-react-native-crypto';
 import { Alert, Button, SafeAreaView, Text, View } from 'react-native';
 import mdlCbor from './mocks/mdl';

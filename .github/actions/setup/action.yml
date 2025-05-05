@@ -9,7 +9,7 @@ runs:
       with:
         node-version-file: .node-version
 
-    - name: Cache dependencies
+    - name: Restore dependencies
       id: yarn-cache
       uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3
       with:
@@ -25,3 +25,12 @@ runs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
       shell: bash
+
+    - name: Cache dependencies
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          **/node_modules
+          .yarn/install-state.gz
+        key: ${{ steps.yarn-cache.outputs.cache-primary-key }}
