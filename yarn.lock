@@ -2515,6 +2515,7 @@ __metadata:
     "@eslint/eslintrc": ^3.3.0
     "@eslint/js": ^9.22.0
     "@evilmartians/lefthook": ^1.5.0
+    "@pagopa/io-react-native-crypto": ^1.0.1
     "@react-native/eslint-config": ^0.78.0
     "@release-it/conventional-changelog": ^9.0.2
     "@types/jest": ^29.5.5
@@ -2534,6 +2535,7 @@ __metadata:
     typescript: ^5.2.2
     zod: ^3.24.1
   peerDependencies:
+    "@pagopa/io-react-native-crypto": "*"
     react: "*"
     react-native: "*"
   languageName: unknown
