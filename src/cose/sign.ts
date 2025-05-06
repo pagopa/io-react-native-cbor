@@ -1,4 +1,4 @@
-import { PublicKey } from '@pagopa/io-react-native-crypto';
+import { type PublicKey } from '@pagopa/io-react-native-crypto';
 import { IoReactNativeCbor } from '../utils/proxy';
 
 /**

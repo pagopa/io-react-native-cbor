@@ -205,6 +205,9 @@ class IoReactNativeCborModule(reactContext: ReactApplicationContext) :
       val retVal = mutableListOf<DocRequested>()
       for (i in 0..<array.size()) {
         val entry = array.getMap(i)
+        if(entry === null){
+          throw Exception("Entry in ReadableMap is null")
+        }
         if (
           !entry.hasKey("alias") || entry.getType("alias") != ReadableType.String ||
           !entry.hasKey("issuerSignedContent") || entry.getType("issuerSignedContent") != ReadableType.String ||
