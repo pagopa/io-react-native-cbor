@@ -141,12 +141,15 @@ class IoReactNativeCbor: NSObject {
       
       let items = try JSONDecoder().decode([String : [String : [String : Bool]]].self, from: Data(fieldRequestedAndAccepted.utf8))
       
-      guard let response = Proximity.shared.generateDeviceResponse(allowed: true, items: items, documents: documentsAsProximityDocument, sessionTranscript: sessionTranscript) else {
+      do {
+        let response = try Proximity.shared.generateDeviceResponse(allowed: true, items: items, documents: documentsAsProximityDocument, sessionTranscript: sessionTranscript)
+        resolve(Data(response).base64EncodedString())
+      } catch {
         ME.unableToGenerateResponse.reject(reject: reject)
         return
       }
       
-      resolve(Data(response).base64EncodedString())
+      
 
       
     } catch let error as NSError where error.domain == ME.invalidDocRequested.rawValue {
