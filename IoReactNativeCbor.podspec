@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
     #IOWalletCBOR dependency
-    s.dependency "IOWalletCBOR", "~> 0.0.9"
+    s.dependency "IOWalletCBOR", "~> 0.1.0"
     #IOWalletProximity dependency
     s.dependency "IOWalletProximity", "~> 1.0.1"
 
