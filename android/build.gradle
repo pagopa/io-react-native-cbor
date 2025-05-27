@@ -79,11 +79,11 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
    // IOWalletCBOR library
-  implementation("it.pagopa.io.wallet.cbor:cbor:1.2.4") {
+  implementation("it.pagopa.io.wallet.cbor:cbor:1.2.7") {
     exclude(group: "org.bouncycastle")
   }
   // IOWalletProximity library
-  implementation("it.pagopa.io.wallet.proximity:proximity:1.2.0") {
+  implementation("it.pagopa.io.wallet.proximity:proximity:1.3.0") {
     exclude(group: "org.bouncycastle")
   }
   implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
