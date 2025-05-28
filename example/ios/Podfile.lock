@@ -8,7 +8,7 @@ PODS:
   - hermes-engine (0.78.2):
     - hermes-engine/Pre-built (= 0.78.2)
   - hermes-engine/Pre-built (0.78.2)
-  - IoReactNativeCbor (1.2.4):
+  - IoReactNativeCbor (1.3.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1799,7 +1799,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: 2771b98fb813fdc6f92edd7c9c0035ecabf9fee7
-  IoReactNativeCbor: 19e06ccecea027ac626004342f352500c50c6f34
+  IoReactNativeCbor: 56454f6ec4809f68ad68ad66f300a4eb99f74154
   IOWalletCBOR: f6147a29e88bfd3ef36386840df1b5f907c3ae41
   IOWalletProximity: fed5a3163c70a81b032db0871542ff0bb03fca13
   pagopa-io-react-native-crypto: b34250ee64b80d058320ee88233177df8d8d03b0
